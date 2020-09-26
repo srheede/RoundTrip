@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoadGeoHash">
+
+    <Button
+        android:id="@+id/buttonLoadShort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/select_file"
+        app:layout_constraintStart_toStartOf="@+id/tv_output_short"
+        app:layout_constraintTop_toBottomOf="@+id/tv_output_short" />
+
+    <Button
+        android:id="@+id/buttonLoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/select_file"
+        app:layout_constraintStart_toStartOf="@+id/textViewSelectFileGeo"
+        app:layout_constraintTop_toBottomOf="@+id/tv_output" />
+
+    <Button
+        android:id="@+id/buttonCalcRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="50dp"
+        android:text="@string/calculate_route"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_output_short"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/textViewSelectFileGeoShort"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectFileGeoShort" />
+
+    <TextView
+        android:id="@+id/textViewSelectFileGeo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:text="@string/select_geohash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/textViewSelectFileGeoShort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="50dp"
+        android:text="Please select the file with the shortest route:"
+        app:layout_constraintStart_toStartOf="@+id/buttonLoad"
+        app:layout_constraintTop_toBottomOf="@+id/buttonLoad" />
+
+    <TextView
+        android:id="@+id/tv_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/textViewSelectFileGeo"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectFileGeo" />
+</androidx.constraintlayout.widget.ConstraintLayout>

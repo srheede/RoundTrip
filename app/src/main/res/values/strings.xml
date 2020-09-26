@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">RoundTrip</string>
+    <string name="load_question">How would you like to enter the route destinations?</string>
+    <string name="LoadCo">Load Coordinates From File</string>
+    <string name="LoadGeoHash">Load GeoHash Codes From File</string>
+    <string name="EnterCo">Manually Enter Coordinates</string>
+    <string name="SelectPlaces">Search And Select Places</string>
+    <string name="Next">Next</string>
+    <string name="PleaseEnterCo">Please enter the coordinates:</string>
+    <string name="Longitude">Longitude</string>
+    <string name="Latitude">Latitude</string>
+    <string name="add_coordinate">Add Coordinate</string>
+    <string name="calculate_route">Calculate Route</string>
+    <string name="pls_add_des">Please add the destinations:</string>
+    <string name="add_des">Add Destination</string>
+    <string name="select_coordinate_file">Please select the file with the coordinates:</string>
+    <string name="select_file">Select File</string>
+    <string name="select_geohash">Please select the file with the geohash locations:</string>
+    <string name="invalid_coordinates">Please enter valid coordinates.</string>
+    <string name="destination_added">%1$f, %2$f was added to destinations.</string>
+    <string name="place_added">"%1$s was added to destinations."</string>
+    <string name="select_dest">Please select next destination.</string>
+    <string name="calculating">Calculating shortest route.</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="reset_list">Reset List</string>
+    <string name="calculating_route">Calculating Route..</string>
+    <string name="route_not_aval">Shortest route not available.</string>
+    <string name="please_select_the_file_with_the_shortest_route">Please select the file with the shortest route:</string>
+</resources>
