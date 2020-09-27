@@ -82,18 +82,18 @@ public class LoadCoordinates extends AppCompatActivity {
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
-                String path = uri.getPath();
-                path = path.substring(path.indexOf(":") + 1);
-                readText(path, READ_REQUEST_CODE);
-                tv_output.setText(path);
+                MainActivity.filePath = uri.getPath();
+                MainActivity.filePath = MainActivity.filePath.substring(MainActivity.filePath.indexOf(":") + 1);
+                readText(MainActivity.filePath, READ_REQUEST_CODE);
+                tv_output.setText(MainActivity.filePath);
             }
         } else if (requestCode == READ_REQUEST_CODE_SHORT && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
-                String path = uri.getPath();
-                path = path.substring(path.indexOf(":") + 1);
-                readText(path, READ_REQUEST_CODE_SHORT);
-                tv_output_short.setText(path);
+                MainActivity.filePath = uri.getPath();
+                MainActivity.filePath = MainActivity.filePath.substring(MainActivity.filePath.indexOf(":") + 1);
+                readText(MainActivity.filePath, READ_REQUEST_CODE_SHORT);
+                tv_output_short.setText(MainActivity.filePath);
             }
         }
     }
@@ -148,9 +148,12 @@ public class LoadCoordinates extends AppCompatActivity {
                 } else if (count == 2 && requestCode == READ_REQUEST_CODE_SHORT) {
                     Destination destination = new Destination(first, second);
                     MainActivity.destinationsShort.add(destination);
-                } else if (count == 3) {
+                } else if (count == 3 && requestCode == READ_REQUEST_CODE) {
                     Destination destination = new Destination(second, third);
                     MainActivity.destinations.add(destination);
+                } else if (count == 3 && requestCode == READ_REQUEST_CODE_SHORT) {
+                    Destination destination = new Destination(second, third);
+                    MainActivity.destinationsShort.add(destination);
                 }
             }
             br.close();

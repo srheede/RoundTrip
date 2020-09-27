@@ -1,21 +1,28 @@
 package za.co.rheeders.roundtrip;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class EnterCoordinates extends AppCompatActivity {
 
     private EditText latitude;
     private EditText longitude;
     private TextView textViewAdded;
+    private static final int STORAGE_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class EnterCoordinates extends AppCompatActivity {
         buttonCalcRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveFile();
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
         });
@@ -89,6 +97,29 @@ public class EnterCoordinates extends AppCompatActivity {
             textViewAdded.setText(string);
         } else {
             textViewAdded.setText(R.string.invalid_coordinates);
+        }
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(EnterCoordinates.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(EnterCoordinates.this, new String[]{permission}, requestCode);
+        }
+    }
+
+    private void saveFile() {
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        try {
+            String path = "/storage/emulated/0/Download/EnteredCoordinates" + MainActivity.destinations.size() + ".txt";
+            FileWriter fileWriter = new FileWriter(path);
+            int n = 1;
+            for (Destination destination : MainActivity.destinations) {
+                fileWriter.write(n++ + ". " + destination.getLatitude() + ", " + destination.getLongitude() + destination.getPlaceName() + "\n");
+            }
+            fileWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
 }

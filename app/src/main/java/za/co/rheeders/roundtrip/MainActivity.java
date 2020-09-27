@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Destination> destinations = new ArrayList<>();
     public static ArrayList<Destination> destinationsShort = new ArrayList<>();
     public static int Name = 1;
+    private static final int STORAGE_PERMISSION_CODE = 101;
+    public static String filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

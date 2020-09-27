@@ -1,6 +1,8 @@
 package za.co.rheeders.roundtrip;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +35,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 public class MapsActivityShort extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final int STORAGE_PERMISSION_CODE = 101;
     private static final int PATTERN_GAP_LENGTH_PX = 15;
     private static final PatternItem DOT = new Dash(30);
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
@@ -97,71 +103,113 @@ public class MapsActivityShort extends FragmentActivity implements OnMapReadyCal
             if (number == size) {
                 Toast.makeText(MapsActivityShort.this, "Brute Force Search Completed.",
                         Toast.LENGTH_LONG).show();
+                setMap(googleMap);
+                saveFile();
             } else {
-                Toast.makeText(MapsActivityShort.this, "Should: " + size + " Is: " + number,
+                Toast.makeText(MapsActivityShort.this, "Only " + number + " of " + size + " routes searched.",
                         Toast.LENGTH_LONG).show();
             }
+        } else {
+            ArrayList<Destination> fullRoute = new ArrayList<>(MainActivity.destinationsShort);
+            fullRoute.add(MainActivity.destinations.get(0));
+            totalDistance = totalDistance(fullRoute);
+            setMap(googleMap);
         }
-        if (!MainActivity.destinationsShort.isEmpty()) {
-            String place;
+    }
 
-            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
-            PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
-
-            for (Destination destination : MainActivity.destinationsShort) {
-                try {
-                    polylineOptions.add(destination.getLatLong());
-                    polygonOptions.add(destination.getLatLong());
-
-                    if (destination.getPlaceName() == null) {
-                        List<Address> addresses = geocoder.getFromLocation(destination.getLatitude(), destination.getLongitude(), 1);
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String address = addresses.get(0).getAddressLine(0);
-                        String cityName = addresses.get(0).getAddressLine(1);
-                        String stateName = addresses.get(0).getAddressLine(2);
-                        if (address != null) {
-                            stringBuilder.append(address);
-                        }
-                        if (cityName != null) {
-                            stringBuilder.append(cityName);
-                        }
-                        if (stateName != null) {
-                            stringBuilder.append(stateName);
-                        }
-                        if (stringBuilder.length() != 0) {
-                            place = stringBuilder.toString();
-                        } else {
-                            place = destination.getGeoHash();
-                        }
-                    } else {
-                        place = destination.getPlaceName();
-                    }
-                    googleMap.addMarker(new MarkerOptions().position(destination.getLatLong()).title(place));
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private void saveFile() {
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        try {
+            String path;
+            if (MainActivity.filePath.isEmpty()) {
+                path = "ManualCoordinates" + MainActivity.destinations.size();
+            } else {
+                path = MainActivity.filePath;
             }
-
-            Polyline polyline = googleMap.addPolyline(polylineOptions);
-            stylePolyline(polyline);
-
-
-            Polygon polygon = googleMap.addPolygon(polygonOptions);
-            polygon.setTag("alpha");
-            stylePolygon(polygon);
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinationsShort.get(0).getLatLong()));
-            String totalDis = "Total distance: " + (int) totalDistance + " km";
-            tvDistanceShort.setText(totalDis);
-
-            googleMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-                @Override
-                public void onPolylineClick(Polyline polyline) {
-
+            FileWriter fileWriter = new FileWriter(path.substring(0, path.lastIndexOf('.')) + " BruteForceSolution.txt");
+            int n = 1;
+            String string;
+            for (Destination destination : MainActivity.destinationsShort) {
+                string = n++ + ". " + destination.getLatitude() + ", " + destination.getLongitude() + " ";
+                if (!destination.getPlaceName().isEmpty()) {
+                    string += destination.getPlaceName();
                 }
-            });
+                fileWriter.write(string + "\n");
+            }
+            fileWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println(e);
         }
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(MapsActivityShort.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(MapsActivityShort.this, new String[]{permission}, requestCode);
+        }
+    }
+
+    private void setMap(GoogleMap googleMap) {
+        String place;
+
+        PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
+        PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
+
+        for (Destination destination : MainActivity.destinationsShort) {
+            try {
+                polylineOptions.add(destination.getLatLong());
+                polygonOptions.add(destination.getLatLong());
+
+                if (destination.getPlaceName() == null) {
+                    List<Address> addresses = geocoder.getFromLocation(destination.getLatitude(), destination.getLongitude(), 1);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String address = addresses.get(0).getAddressLine(0);
+                    String cityName = addresses.get(0).getAddressLine(1);
+                    String stateName = addresses.get(0).getAddressLine(2);
+                    if (address != null) {
+                        stringBuilder.append(address);
+                    }
+                    if (cityName != null) {
+                        stringBuilder.append(cityName);
+                    }
+                    if (stateName != null) {
+                        stringBuilder.append(stateName);
+                    }
+                    if (stringBuilder.length() != 0) {
+                        place = stringBuilder.toString();
+                    } else {
+                        place = destination.getGeoHash();
+                    }
+                } else {
+                    place = destination.getPlaceName();
+                }
+                googleMap.addMarker(new MarkerOptions().position(destination.getLatLong()).title(place));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Polyline polyline = googleMap.addPolyline(polylineOptions);
+        stylePolyline(polyline);
+
+
+        Polygon polygon = googleMap.addPolygon(polygonOptions);
+        polygon.setTag("alpha");
+        stylePolygon(polygon);
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinationsShort.get(0).getLatLong()));
+        String totalDis = "Total distance: " + (int) totalDistance + " km";
+        tvDistanceShort.setText(totalDis);
+
+        googleMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+
+            }
+        });
+
         tvDistanceShort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,8 +246,8 @@ public class MapsActivityShort extends FragmentActivity implements OnMapReadyCal
         } else {
             Toast.makeText(MapsActivityShort.this, "Brute forcing the shortest route.",
                     Toast.LENGTH_LONG).show();
-            MainActivity.destinationsShort = MainActivity.destinations;
-            ArrayList<Destination> fullRoute = new ArrayList<Destination>(MainActivity.destinations);
+            MainActivity.destinationsShort = new ArrayList<>(MainActivity.destinations);
+            ArrayList<Destination> fullRoute = new ArrayList<>(MainActivity.destinations);
             fullRoute.add(MainActivity.destinations.get(0));
             totalDistance = totalDistance(fullRoute);
             shortestPermutation(MainActivity.destinations, 0);
@@ -208,15 +256,15 @@ public class MapsActivityShort extends FragmentActivity implements OnMapReadyCal
 
     private void shortestPermutation(ArrayList<Destination> destinations, int n) {
         if (n >= destinations.size()) {
-//            System.out.println("Count: " + Integer.toString(++number));
-//            System.out.println("Next destinations: ");
-//            for (Destination destination : destinations) {
-//                System.out.println(destination.getPlaceName());
-//            }
-            ArrayList<Destination> fullRoute = new ArrayList<Destination>(destinations);
+            System.out.println("Count: " + ++number);
+            System.out.println("Next destinations: ");
+            for (Destination destination : destinations) {
+                System.out.println(destination.getPlaceName());
+            }
+            ArrayList<Destination> fullRoute = new ArrayList<>(destinations);
             fullRoute.add(destinations.get(0));
             if (totalDistance(fullRoute) < totalDistance) {
-                MainActivity.destinationsShort = fullRoute;
+                MainActivity.destinationsShort = new ArrayList<>(destinations);
                 totalDistance = totalDistance(fullRoute);
                 System.out.println("Distance: " + (int) totalDistance);
             }

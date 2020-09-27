@@ -81,20 +81,20 @@ public class LoadGeoHash extends AppCompatActivity {
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
-                String path = uri.getPath();
-                path = path.substring(path.indexOf(":") + 1);
+                MainActivity.filePath = uri.getPath();
+                MainActivity.filePath = MainActivity.filePath.substring(MainActivity.filePath.indexOf(":") + 1);
                 Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-                readText(path, READ_REQUEST_CODE);
-                tv_output.setText(path);
+                readText(MainActivity.filePath, READ_REQUEST_CODE);
+                tv_output.setText(MainActivity.filePath);
             }
         } else if (requestCode == READ_REQUEST_CODE_SHORT && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
-                String path = uri.getPath();
-                path = path.substring(path.indexOf(":") + 1);
+                MainActivity.filePath = uri.getPath();
+                za.co.rheeders.roundtrip.MainActivity.filePath = za.co.rheeders.roundtrip.MainActivity.filePath.substring(za.co.rheeders.roundtrip.MainActivity.filePath.indexOf(":") + 1);
                 Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-                readText(path, READ_REQUEST_CODE_SHORT);
-                tv_output_short.setText(path);
+                readText(za.co.rheeders.roundtrip.MainActivity.filePath, READ_REQUEST_CODE_SHORT);
+                tv_output_short.setText(za.co.rheeders.roundtrip.MainActivity.filePath);
             }
         }
     }

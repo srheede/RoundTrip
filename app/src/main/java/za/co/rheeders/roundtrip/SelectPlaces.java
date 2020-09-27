@@ -1,6 +1,8 @@
 package za.co.rheeders.roundtrip;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,10 +16,14 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import static za.co.rheeders.roundtrip.GeoHash.encodeHash;
 
@@ -28,7 +34,7 @@ public class SelectPlaces extends AppCompatActivity {
     private String geoHash;
     private TextView textViewAdded;
     private Place place;
-
+    private static final int STORAGE_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class SelectPlaces extends AppCompatActivity {
         buttonCalcRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveFile();
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
         });
@@ -63,13 +70,11 @@ public class SelectPlaces extends AppCompatActivity {
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(Place placeSelected) {
-                    // TODO: Get info about the selected place.
                     place = placeSelected;
                 }
 
                 @Override
                 public void onError(@NonNull Status status) {
-                    // TODO: Handle the error.
                     System.out.println(status);
                 }
             });
@@ -92,12 +97,30 @@ public class SelectPlaces extends AppCompatActivity {
                 } else {
                     textViewAdded.setText(R.string.select_dest);
                 }
-
-                System.out.println("NEXT:");
-                for (Destination destination : MainActivity.destinations) {
-                    System.out.println(destination.getPlaceName());
-                }
             }
         });
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(SelectPlaces.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(SelectPlaces.this, new String[]{permission}, requestCode);
+        }
+    }
+
+    private void saveFile() {
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        try {
+            String path = "/storage/emulated/0/Download/PlacesCoordinates" + MainActivity.destinations.size() + ".txt";
+            FileWriter fileWriter = new FileWriter(path);
+            int n = 1;
+            for (Destination destination : MainActivity.destinations) {
+                fileWriter.write(n++ + ". " + destination.getLatitude() + ", " + destination.getLongitude() + "\n");
+            }
+            fileWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }
