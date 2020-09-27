@@ -1,4 +1,4 @@
 /build
-src/main/res/values/apiKey.xml
-src/debug/res/values/google_maps_api.xml
-src/main/java/za/co/rheeders/roundtrip/Algorithm.java
+/src/main/res/values/apiKey.xml
+/src/debug/res/values/google_maps_api.xml
+/src/main/java/za/co/rheeders/roundtrip/Algorithm.java
