@@ -51,35 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Create a stroke pattern of a dot followed by a gap, a dash, and another gap.
     private static final List<PatternItem> PATTERN_POLYGON_BETA =
             Arrays.asList(DOT, GAP, DASH, GAP);
-    private TextView totalDistance;
+    private TextView tvDistance;
     private Geocoder geocoder;
-
-    public static double distance(double lat1, double lon1, double lat2, double lon2) {
-
-        // The math module contains a function
-        // named toRadians which converts from
-        // degrees to radians.
-        lon1 = Math.toRadians(lon1);
-        lon2 = Math.toRadians(lon2);
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-
-        // Haversine formula
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-        double a = Math.pow(Math.sin(dlat / 2), 2)
-                + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin(dlon / 2), 2);
-
-        double c = 2 * Math.asin(Math.sqrt(a));
-
-        // Radius of earth in kilometers. Use 3956
-        // for miles
-        double r = 6371;
-
-        // calculate the result
-        return (c * r);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        totalDistance = findViewById(R.id.textViewDistance);
+        tvDistance = findViewById(R.id.textViewDistance);
 
         geocoder = new Geocoder(this, Locale.getDefault());
     }
@@ -112,12 +85,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
             PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
+            Algorithm algorithm = new Algorithm(MainActivity.destinations);
 
-            ArrayList<Destination> fullRoute = new ArrayList<Destination>(MainActivity.destinations);
-            fullRoute.add(MainActivity.destinations.get(0));
-            double distance = totalDistance(fullRoute);
-
-            for (Destination destination : MainActivity.destinations) {
+            for (Destination destination : algorithm.getShortestRoute()) {
                 try {
                     polylineOptions.add(destination.getLatLong());
                     polygonOptions.add(destination.getLatLong());
@@ -161,11 +131,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             stylePolygon(polygon);
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinations.get(0).getLatLong()));
-            String totalDis = "Total distance: " + (int) distance + " km";
-            totalDistance.setText(totalDis);
-//            Toast.makeText(MapsActivity.this, Double.toString(distance),
-//                    Toast.LENGTH_SHORT).show();
-            totalDistance.setOnClickListener(new View.OnClickListener() {
+            String totalDis = "Total distance: " + (int) algorithm.getShortestDistance() + " km";
+            tvDistance.setText(totalDis);
+            tvDistance.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(getApplicationContext(), MapsActivityShort.class));
@@ -179,6 +147,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2), 2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        double r = 6371;
+
+        // calculate the result
+        return (c * r);
     }
 
     private double totalDistance(ArrayList<Destination> destinations) {

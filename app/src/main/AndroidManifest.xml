@@ -36,7 +36,6 @@
             android:name=".MapsActivityShort"
             android:label="Map Short" />
 
-        <activity android:name=".Algorithm" />
         <activity android:name=".EnterCoordinates" />
         <activity android:name=".SelectPlaces" />
         <activity android:name=".LoadGeoHash" />
