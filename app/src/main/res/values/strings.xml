@@ -26,4 +26,11 @@
     <string name="calculating_route">Calculating Route..</string>
     <string name="route_not_aval">Shortest route not available.</string>
     <string name="please_select_the_file_with_the_shortest_route">Please select the file with the shortest route:</string>
+    <string name="title_activity_proof_check_algorithm">proofCheckAlgorithm</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="run_check_on_algorithm">Run Check On Algorithm</string>
 </resources>

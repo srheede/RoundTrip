@@ -56,6 +56,12 @@
             android:layout_height="wrap_content"
             android:text="@string/SelectPlaces" />
 
+        <RadioButton
+            android:id="@+id/radioButtonProofCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/run_check_on_algorithm" />
+
     </RadioGroup>
 
     <TextView

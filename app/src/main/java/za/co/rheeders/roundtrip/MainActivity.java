@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.radioButtonSelectPlaces:
                         startActivity(new Intent(getApplicationContext(), SelectPlaces.class));
                         break;
+                    case R.id.radioButtonProofCheck:
+                        startActivity(new Intent(getApplicationContext(), ProofCheckAlgorithm.class));
+                        break;
                 }
             }
         });

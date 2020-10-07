@@ -1,7 +1,5 @@
 package za.co.rheeders.roundtrip;
 
-import android.content.Intent;
-import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
@@ -15,15 +13,11 @@ import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,8 +45,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Create a stroke pattern of a dot followed by a gap, a dash, and another gap.
     private static final List<PatternItem> PATTERN_POLYGON_BETA =
             Arrays.asList(DOT, GAP, DASH, GAP);
-    private TextView tvDistance;
-    private Geocoder geocoder;
+    public static TextView tvDistance;
+    public static Geocoder geocoder;
+    public static GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,63 +75,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
         if (!MainActivity.destinations.isEmpty()) {
             String place;
 
-            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
-            PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
+//            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
+//            PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
+
             Algorithm algorithm = new Algorithm(MainActivity.destinations);
-
-            for (Destination destination : algorithm.getShortestRoute()) {
-                try {
-                    polylineOptions.add(destination.getLatLong());
-                    polygonOptions.add(destination.getLatLong());
-
-                    if (destination.getPlaceName() == null) {
-                        List<Address> addresses = geocoder.getFromLocation(destination.getLatitude(), destination.getLongitude(), 1);
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String address = addresses.get(0).getAddressLine(0);
-                        String cityName = addresses.get(0).getAddressLine(1);
-                        String stateName = addresses.get(0).getAddressLine(2);
-                        if (address != null) {
-                            stringBuilder.append(address);
-                        }
-                        if (cityName != null) {
-                            stringBuilder.append(cityName);
-                        }
-                        if (stateName != null) {
-                            stringBuilder.append(stateName);
-                        }
-                        if (stringBuilder.length() != 0) {
-                            place = stringBuilder.toString();
-                        } else {
-                            place = destination.getGeoHash();
-                        }
-                    } else {
-                        place = destination.getPlaceName();
-                    }
-                    googleMap.addMarker(new MarkerOptions().position(destination.getLatLong()).title(place));
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            Polyline polyline = googleMap.addPolyline(polylineOptions);
-            stylePolyline(polyline);
-
-
-            Polygon polygon = googleMap.addPolygon(polygonOptions);
-            polygon.setTag("alpha");
-            stylePolygon(polygon);
+//            for (Destination destination : algorithm.getShortestRoute()) {
+//                try {
+//                    polylineOptions.add(destination.getLatLong());
+//                    polygonOptions.add(destination.getLatLong());
+//
+//                    if (destination.getPlaceName() == null) {
+//                        List<Address> addresses = geocoder.getFromLocation(destination.getLatitude(), destination.getLongitude(), 1);
+//                        StringBuilder stringBuilder = new StringBuilder();
+//                        String address = addresses.get(0).getAddressLine(0);
+//                        String cityName = addresses.get(0).getAddressLine(1);
+//                        String stateName = addresses.get(0).getAddressLine(2);
+//                        if (address != null) {
+//                            stringBuilder.append(address);
+//                        }
+//                        if (cityName != null) {
+//                            stringBuilder.append(cityName);
+//                        }
+//                        if (stateName != null) {
+//                            stringBuilder.append(stateName);
+//                        }
+//                        if (stringBuilder.length() != 0) {
+//                            place = stringBuilder.toString();
+//                        } else {
+//                            place = destination.getGeoHash();
+//                        }
+//                    } else {
+//                        place = destination.getPlaceName();
+//                    }
+////                    googleMap.addMarker(new MarkerOptions().position(destination.getLatLong()).title(place));
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            Polygon polygon = googleMap.addPolygon(polygonOptions);
+//            polygon.setTag("alpha");
+//            stylePolygon(polygon);
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinations.get(0).getLatLong()));
+//
             String totalDis = "Total distance: " + (int) algorithm.getShortestDistance() + " km";
-            tvDistance.setText(totalDis);
+
+            MapsActivity.tvDistance.setText(totalDis);
+
             tvDistance.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getApplicationContext(), MapsActivityShort.class));
+//                    startActivity(new Intent(getApplicationContext(), MapsActivityShort.class));
+                    Algorithm.addNextDestination();
                 }
             });
 
@@ -147,6 +143,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+    }
+
+    private double distancePointToLine(Destination point, Destination segmentPointA, Destination segmentPointB) {
+
+        double factor;
+        double dotProduct;
+        double len_sq;
+
+        double x0 = point.getLongitude();
+        double y0 = point.getLatitude();
+        double x1 = segmentPointA.getLongitude();
+        double y1 = segmentPointA.getLatitude();
+        double x2 = segmentPointB.getLongitude();
+        double y2 = segmentPointB.getLatitude();
+
+        double A = x0 - x1;
+        double B = y0 - y1;
+        double C = x2 - x1;
+        double D = y2 - y1;
+
+        dotProduct = A * C + B * D;
+        len_sq = C * C + D * D;
+        factor = -1;
+
+        if (len_sq != 0)
+            factor = dotProduct / len_sq;
+
+        double yy;
+        double xx;
+
+        if (factor < 0) {
+            xx = x1;
+            yy = y1;
+        } else if (factor >= 1) {
+            xx = x2;
+            yy = y2;
+        } else {
+            xx = x1 + factor * C;
+            yy = y1 + factor * D;
+        }
+
+        double dx = x0 - xx;
+        double dy = y0 - yy;
+
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {

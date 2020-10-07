@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import static za.co.rheeders.roundtrip.GeoHash.decodeHash;
 import static za.co.rheeders.roundtrip.GeoHash.encodeHash;
 
-public class Destination {
+public class Destination implements Comparable {
     private double latitude;
     private double longitude;
     private String geoHash;
@@ -27,6 +27,12 @@ public class Destination {
         this.latitude = latLong.getLat();
         this.longitude = latLong.getLon();
         this.latLong = new LatLng(latitude, longitude);
+    }
+
+    @Override
+    public int compareTo(Object other) {
+        Destination destination = (Destination) other;
+        return (int) (this.latitude - destination.latitude);
     }
 
     public LatLng getLatLong() {
@@ -76,4 +82,5 @@ public class Destination {
     public void setGeoHash(String geoHash) {
         this.geoHash = geoHash;
     }
+
 }
