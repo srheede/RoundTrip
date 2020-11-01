@@ -8,6 +8,7 @@ import static za.co.rheeders.roundtrip.GeoHash.encodeHash;
 public class Destination implements Comparable {
     private double latitude;
     private double longitude;
+    private double distanceCenter;
     private String geoHash;
     private String placeId;
     private String placeName;
@@ -33,6 +34,14 @@ public class Destination implements Comparable {
     public int compareTo(Object other) {
         Destination destination = (Destination) other;
         return (int) (this.latitude - destination.latitude);
+    }
+
+    public double getDistanceCenter() {
+        return distanceCenter;
+    }
+
+    public void setDistanceCenter(double distanceCenter) {
+        this.distanceCenter = distanceCenter;
     }
 
     public LatLng getLatLong() {
@@ -63,7 +72,7 @@ public class Destination implements Comparable {
         return latitude;
     }
 
-    public void setLatitude(int latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -71,7 +80,7 @@ public class Destination implements Comparable {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

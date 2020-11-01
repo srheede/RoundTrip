@@ -40,9 +40,35 @@ public class LoadGeoHash extends AppCompatActivity {
 
         Button load = findViewById(R.id.buttonLoad);
         Button loadShort = findViewById(R.id.buttonLoadShort);
-        Button buttonCalcRoute = findViewById(R.id.buttonCalcRoute);
         tv_output = findViewById(R.id.tv_output);
         tv_output_short = findViewById(R.id.tv_output_short);
+        Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);
+        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteBubbleShrink);
+        Button buttonCalcRouteCombo = findViewById(R.id.buttonCalcRouteCombo);
+
+        buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.switchAlgorithm = 0;
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            }
+        });
+
+        buttonCalcRouteParameterDiamond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.switchAlgorithm = 1;
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            }
+        });
+
+        buttonCalcRouteCombo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.switchAlgorithm = 2;
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            }
+        });
 
         load.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,12 +83,6 @@ public class LoadGeoHash extends AppCompatActivity {
             }
         });
 
-        buttonCalcRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-            }
-        });
     }
 
     @Override

@@ -132,7 +132,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onClick(View view) {
 //                    startActivity(new Intent(getApplicationContext(), MapsActivityShort.class));
-                    Algorithm.addNextDestination();
+//                    Algorithm.addNextDestination();
+                    switch (MainActivity.switchAlgorithm) {
+                        case 0:
+                            if (!Algorithm.sortedLatitude.isEmpty()) {
+                                Algorithm.addNextPoint();
+                            }
+                            break;
+                        case 1:
+                            Algorithm.addNextDestination();
+                            break;
+                        case 2:
+                            Algorithm.addNext();
+                            break;
+
+                    }
+
                 }
             });
 

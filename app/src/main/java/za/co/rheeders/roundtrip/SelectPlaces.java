@@ -42,12 +42,33 @@ public class SelectPlaces extends AppCompatActivity {
         setContentView(R.layout.activity_select_places);
         textViewAdded = findViewById(R.id.textViewAdded);
         Button buttonAddDes = findViewById(R.id.buttonAddDes);
-        Button buttonCalcRoute = findViewById(R.id.buttonCalcRoute);
+        Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);
+        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteBubbleShrink);
+        Button buttonCalcRouteCombo = findViewById(R.id.buttonCalcRouteCombo);
 
-        buttonCalcRoute.setOnClickListener(new View.OnClickListener() {
+        buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveFile();
+                MainActivity.switchAlgorithm = 0;
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            }
+        });
+
+        buttonCalcRouteParameterDiamond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveFile();
+                MainActivity.switchAlgorithm = 1;
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            }
+        });
+
+        buttonCalcRouteCombo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveFile();
+                MainActivity.switchAlgorithm = 2;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
         });

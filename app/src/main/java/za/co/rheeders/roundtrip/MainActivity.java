@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public static int Name = 1;
     private static final int STORAGE_PERMISSION_CODE = 101;
     public static String filePath;
+    public static int switchAlgorithm = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
