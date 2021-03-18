@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -121,7 +122,8 @@ public class LoadCoordinates extends AppCompatActivity {
     private void readText(String input, int requestCode) {
         File file = new File(input);
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            FileReader fileReader = new FileReader(Environment.getExternalStorageDirectory().toString() + "/" + file);
+            BufferedReader br = new BufferedReader(fileReader);
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.replace(',', ' ');
