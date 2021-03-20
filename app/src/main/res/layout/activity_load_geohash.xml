@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/select_file"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/tv_output_short"
         app:layout_constraintTop_toBottomOf="@+id/tv_output_short" />
 
@@ -53,8 +54,7 @@
         android:layout_marginBottom="10dp"
         android:text="Calculate Route (Bubble Shrink)"
         app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteParameterDiamond"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond" />
 
     <TextView
         android:id="@+id/tv_output_short"
@@ -71,9 +71,7 @@
         android:layout_gravity="top"
         android:text="@string/select_geohash"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.15" />
 
@@ -84,6 +82,7 @@
         android:layout_gravity="top"
         android:layout_marginTop="50dp"
         android:text="Please select the file with the shortest route:"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/buttonLoad"
         app:layout_constraintTop_toBottomOf="@+id/buttonLoad" />
 

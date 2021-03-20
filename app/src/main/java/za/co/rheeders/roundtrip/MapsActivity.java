@@ -3,8 +3,10 @@ package za.co.rheeders.roundtrip;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,7 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int COLOR_PURPLE_ARGB = 0xff81C784;
     private static final int COLOR_ORANGE_ARGB = 0xffF57F17;
     private static final int COLOR_BLUE_ARGB = 0xffF9A825;
-    private static final int POLYGON_STROKE_WIDTH_PX = 8;
+    private static final int POLYGON_STROKE_WIDTH_PX = 3;
     private static final int PATTERN_DASH_LENGTH_PX = 20;
     private static final PatternItem DASH = new Dash(PATTERN_DASH_LENGTH_PX);
     // Create a stroke pattern of a gap followed by a dash.
@@ -64,17 +66,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         geocoder = new Geocoder(this, Locale.getDefault());
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         map = googleMap;
         if (!MainActivity.destinations.isEmpty()) {
             String place;
@@ -133,6 +126,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onClick(View view) {
 //                    startActivity(new Intent(getApplicationContext(), MapsActivityShort.class));
 //                    Algorithm.addNextDestination();
+
+                }
+            });
+
+            Button buttonZoomIn = findViewById(R.id.buttonZoomIn);
+            Button buttonZoomOut = findViewById(R.id.buttonZoomOut);
+            Button buttonNextStep = findViewById(R.id.buttonNextStep);
+            Button buttonPreviousStep = findViewById(R.id.buttonPreviousStep);
+
+            buttonNextStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     switch (MainActivity.switchAlgorithm) {
                         case 0:
                             if (!Algorithm.sortedLatitude.isEmpty()) {
@@ -145,9 +150,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         case 2:
                             Algorithm.addNext();
                             break;
-
                     }
+                }
+            });
 
+            buttonPreviousStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (MainActivity.switchAlgorithm) {
+                        case 0:
+                            if (!Algorithm.sortedLatitude.isEmpty()) {
+                                Algorithm.rollbackPoint();
+                            }
+                            break;
+                        case 1:
+                            Algorithm.rollbackDestination();
+                            break;
+                        case 2:
+                            Algorithm.rollback();
+                            break;
+                    }
+                }
+            });
+
+            buttonZoomIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    googleMap.moveCamera(CameraUpdateFactory.zoomBy((float) 0.4));
+                }
+            });
+
+            buttonZoomOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    googleMap.moveCamera(CameraUpdateFactory.zoomBy((float) -0.3));
                 }
             });
 

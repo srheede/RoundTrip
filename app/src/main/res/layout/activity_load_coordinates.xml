@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/select_file"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/textViewSelectFile"
         app:layout_constraintTop_toBottomOf="@+id/tv_output_short" />
 
@@ -23,7 +24,6 @@
         android:text="Calculate Route (Parameter Diamond)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -44,8 +44,7 @@
         android:layout_marginBottom="10dp"
         android:text="Calculate Route (Bubble Shrink)"
         app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteParameterDiamond"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/buttonLoad" />
 
     <Button
         android:id="@+id/buttonLoad"
@@ -63,9 +62,7 @@
         android:layout_gravity="top"
         android:text="@string/select_coordinate_file"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.15" />
 
@@ -76,6 +73,7 @@
         android:layout_gravity="top"
         android:layout_marginTop="50dp"
         android:text="@string/please_select_the_file_with_the_shortest_route"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/buttonLoad"
         app:layout_constraintTop_toBottomOf="@+id/buttonLoad" />
 

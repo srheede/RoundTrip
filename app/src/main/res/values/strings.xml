@@ -4,7 +4,7 @@
     <string name="LoadCo">Load Coordinates From File</string>
     <string name="LoadGeoHash">Load GeoHash Codes From File</string>
     <string name="EnterCo">Manually Enter Coordinates</string>
-    <string name="SelectPlaces">Search And Select Places</string>
+    <string name="SelectPlaces">Search And Select Addresses</string>
     <string name="Next">Next</string>
     <string name="PleaseEnterCo">Please enter the coordinates:</string>
     <string name="Longitude">Longitude</string>
@@ -22,7 +22,7 @@
     <string name="select_dest">Please select next destination.</string>
     <string name="calculating">Calculating shortest route.</string>
     <string name="title_activity_maps">Map</string>
-    <string name="reset_list">Reset List</string>
+    <string name="reset_list">Clear previous destinations from memory</string>
     <string name="calculating_route">Calculating Route..</string>
     <string name="route_not_aval">Shortest route not available.</string>
     <string name="please_select_the_file_with_the_shortest_route">Please select the file with the shortest route:</string>
@@ -31,6 +31,7 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
-    <string name="run_check_on_algorithm">Run Check On Algorithm</string>
+    <string name="run_check_on_algorithm">Run Automated Check On Algorithms</string>
+    <string name="nextStep"><![CDATA[>]]></string>
+    <string name="previousStep"><![CDATA[<]]></string>
 </resources>

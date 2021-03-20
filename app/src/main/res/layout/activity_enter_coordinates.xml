@@ -44,8 +44,7 @@
         android:layout_marginBottom="10dp"
         android:text="Calculate Route (Bubble Shrink)"
         app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteParameterDiamond"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond" />
 
     <EditText
         android:id="@+id/editTextLatitude"
@@ -55,7 +54,7 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/Latitude"
-        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
@@ -75,9 +74,7 @@
         android:layout_height="wrap_content"
         android:text="@string/PleaseEnterCo"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editTextLatitude"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
 
