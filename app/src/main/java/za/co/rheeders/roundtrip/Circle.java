@@ -14,6 +14,11 @@ public class Circle {
         this.radius = radius;
     }
 
+    public Circle(Circle circle){
+        this.centerCoordinates = circle.centerCoordinates;
+        this.radius = circle.radius;
+    }
+
     public Destination getDestination() {
         return centerCoordinates;
     }

@@ -27,6 +27,8 @@ import java.util.Locale;
 
 import androidx.fragment.app.FragmentActivity;
 
+import static za.co.rheeders.roundtrip.Algorithm.enteredRoute;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PATTERN_GAP_LENGTH_PX = 15;
@@ -134,22 +136,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Button buttonZoomOut = findViewById(R.id.buttonZoomOut);
             Button buttonNextStep = findViewById(R.id.buttonNextStep);
             Button buttonPreviousStep = findViewById(R.id.buttonPreviousStep);
+            final ArrayList<Rollback> rollbacks = new ArrayList<Rollback>();
 
             buttonNextStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (MainActivity.switchAlgorithm) {
-                        case 0:
-                            if (!Algorithm.sortedLatitude.isEmpty()) {
-                                Algorithm.addNextPoint();
-                            }
-                            break;
-                        case 1:
-                            Algorithm.addNextDestination();
-                            break;
-                        case 2:
-                            Algorithm.addNext();
-                            break;
+                    rollbacks.add(new Rollback());
+                    if (enteredRoute.size() > 4) {
+                        switch (MainActivity.switchAlgorithm) {
+                            case 0:
+                                if (!Algorithm.sortedLatitude.isEmpty()) {
+                                    Algorithm.addNextPoint();
+                                }
+                                break;
+                            case 1:
+                                Algorithm.addNextDestination();
+                                break;
+                            case 2:
+                                Algorithm.addNext();
+                                break;
+                        }
                     }
                 }
             });
@@ -157,19 +163,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buttonPreviousStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (MainActivity.switchAlgorithm) {
-                        case 0:
-                            if (!Algorithm.sortedLatitude.isEmpty()) {
-                                Algorithm.rollbackPoint();
-                            }
-                            break;
-                        case 1:
-                            Algorithm.rollbackDestination();
-                            break;
-                        case 2:
-                            Algorithm.rollback();
-                            break;
-                    }
+                    if (!rollbacks.isEmpty()){
+                    Algorithm.enteredRoute = rollbacks.get(rollbacks.size() - 1).enteredRoute;
+                    Algorithm.shortestRoute = rollbacks.get(rollbacks.size() - 1).shortestRoute;
+                    Algorithm.bubbleShrinkRoute = rollbacks.get(rollbacks.size() - 1).bubbleShrinkRoute;
+                    Algorithm.parameterDiamondRoute = rollbacks.get(rollbacks.size() - 1).parameterDiamondRoute;
+                    Algorithm.sortedLatitude = rollbacks.get(rollbacks.size() - 1).sortedLatitude;
+                    Algorithm.bubbleShrinkDistance = rollbacks.get(rollbacks.size() - 1).bubbleShrinkDistance;
+                    Algorithm.parameterDiamondDistance = rollbacks.get(rollbacks.size() - 1).parameterDiamondDistance;
+                    Algorithm.shortestDistance = rollbacks.get(rollbacks.size() - 1).shortestDistance;
+                    Algorithm.smallestCircle = rollbacks.get(rollbacks.size() - 1).smallestCircle;
+                    rollbacks.remove(rollbacks.size() - 1);
+                    Algorithm.setMap();}
+//                    switch (MainActivity.switchAlgorithm) {
+//                        case 0:
+//                            if (!Algorithm.sortedLatitude.isEmpty()) {
+//                                Algorithm.rollbackPoint();
+//                            }
+//                            break;
+//                        case 1:
+//                            Algorithm.rollbackDestination();
+//                            break;
+//                        case 2:
+//                            Algorithm.rollback();
+//                            break;
+//                    }
                 }
             });
 
