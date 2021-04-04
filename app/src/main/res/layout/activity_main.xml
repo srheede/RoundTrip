@@ -10,10 +10,10 @@
         android:id="@+id/buttonNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:text="@string/Next"
         app:layout_constraintEnd_toEndOf="@+id/load_question"
-        app:layout_constraintTop_toBottomOf="@+id/radioButtonProofCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupLoadOption" />
 
     <Button
         android:id="@+id/buttonReset"
@@ -57,6 +57,22 @@
             android:layout_height="wrap_content"
             android:text="@string/SelectPlaces" />
 
+        <RadioButton
+            android:id="@+id/radioButtonUseExample"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/UseExample" />
+
+        <RadioButton
+            android:id="@+id/radioButtonProofCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/run_check_on_algorithm"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/radioGroupLoadOption"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupLoadOption" />
+
     </RadioGroup>
 
     <TextView
@@ -69,14 +85,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
-
-    <RadioButton
-        android:id="@+id/radioButtonProofCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/run_check_on_algorithm"
-        app:layout_constraintStart_toStartOf="@+id/radioGroupLoadOption"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupLoadOption" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

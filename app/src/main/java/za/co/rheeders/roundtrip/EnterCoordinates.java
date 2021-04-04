@@ -40,7 +40,7 @@ public class EnterCoordinates extends AppCompatActivity {
         buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveFile();
+//                saveFile();
                 MainActivity.switchAlgorithm = 0;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
@@ -49,7 +49,7 @@ public class EnterCoordinates extends AppCompatActivity {
         buttonCalcRouteParameterDiamond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveFile();
+//                saveFile();
                 MainActivity.switchAlgorithm = 1;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }

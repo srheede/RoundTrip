@@ -49,7 +49,7 @@ public class SelectPlaces extends AppCompatActivity {
         buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveFile();
+//                saveFile();
                 MainActivity.switchAlgorithm = 0;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
@@ -58,7 +58,7 @@ public class SelectPlaces extends AppCompatActivity {
         buttonCalcRouteParameterDiamond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveFile();
+//                saveFile();
                 MainActivity.switchAlgorithm = 1;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }

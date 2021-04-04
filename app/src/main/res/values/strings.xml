@@ -34,4 +34,5 @@
     <string name="run_check_on_algorithm">Run Automated Check On Algorithms</string>
     <string name="nextStep"><![CDATA[>]]></string>
     <string name="previousStep"><![CDATA[<]]></string>
+    <string name="UseExample">Use Existing Examples</string>
 </resources>

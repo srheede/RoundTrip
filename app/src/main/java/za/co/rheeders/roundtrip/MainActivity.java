@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         Next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                destinations.clear();
-                destinationsShort.clear();
-                Name = 1;
+//                destinations.clear();
+//                destinationsShort.clear();
+//                Name = 1;
                 switch (LoadOption.getCheckedRadioButtonId()) {
                     case R.id.radioButtonLoadCo:
                         startActivity(new Intent(getApplicationContext(), LoadCoordinates.class));
