@@ -15,12 +15,15 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class LoadCoordinates extends AppCompatActivity {
 
@@ -29,11 +32,14 @@ public class LoadCoordinates extends AppCompatActivity {
     private static final int READ_REQUEST_CODE_SHORT = 43;
     private TextView tv_output;
     private TextView tv_output_short;
+    private static final int STORAGE_PERMISSION_CODE = 101;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_coordinates);
+        MainActivity.hasSolution = 0;
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_STORAGE);
@@ -50,6 +56,7 @@ public class LoadCoordinates extends AppCompatActivity {
         buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveFile();
                 MainActivity.switchAlgorithm = 0;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
@@ -107,6 +114,7 @@ public class LoadCoordinates extends AppCompatActivity {
                 MainActivity.filePath = MainActivity.filePath.substring(MainActivity.filePath.indexOf(":") + 1);
                 readText(MainActivity.filePath, READ_REQUEST_CODE);
                 tv_output.setText(MainActivity.filePath);
+
             }
         } else if (requestCode == READ_REQUEST_CODE_SHORT && resultCode == Activity.RESULT_OK) {
             if (data != null) {
@@ -189,5 +197,27 @@ public class LoadCoordinates extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/*");
         startActivityForResult(intent, requestCode);
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(LoadCoordinates.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(LoadCoordinates.this, new String[]{permission}, requestCode);
+        }
+    }
+
+    private void saveFile() {
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        try {
+            String path = "/storage/emulated/0/Download/PlacesCoordinates" + MainActivity.destinations.size() + ".txt";
+            FileWriter fileWriter = new FileWriter(path);
+            for (Destination destination : MainActivity.destinations) {
+                fileWriter.write("destination = new Destination(" + destination.getLatitude() + "," + destination.getLongitude() + ");\nMainActivity.destinations.add(destination);\n");
+            }
+            fileWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }

@@ -40,6 +40,7 @@ public class SelectPlaces extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_places);
+        MainActivity.hasSolution = 0;
         textViewAdded = findViewById(R.id.textViewAdded);
         Button buttonAddDes = findViewById(R.id.buttonAddDes);
         Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);

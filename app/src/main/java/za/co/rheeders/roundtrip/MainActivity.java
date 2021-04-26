@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 101;
     public static String filePath;
     public static int switchAlgorithm = 0;
+    public static int hasSolution = 0;
+    public static int solution = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         Next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                destinations.clear();
-//                destinationsShort.clear();
-//                Name = 1;
+                destinations.clear();
+                destinationsShort.clear();
+                Name = 1;
                 switch (LoadOption.getCheckedRadioButtonId()) {
                     case R.id.radioButtonLoadCo:
                         startActivity(new Intent(getApplicationContext(), LoadCoordinates.class));
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.radioButtonProofCheck:
                         startActivity(new Intent(getApplicationContext(), ProofCheckAlgorithm.class));
+                        break;
+                    case R.id.radioButtonUseExample:
+                        startActivity(new Intent(getApplicationContext(), UseExample.class));
                         break;
                 }
             }
