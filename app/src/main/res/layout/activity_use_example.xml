@@ -61,7 +61,7 @@
             android:id="@+id/radioButton980"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Luxembourg - 980 Cities" />
+            android:text="Luxembourg - 980 Cities (Can Take Long)" />
 
     </RadioGroup>
 

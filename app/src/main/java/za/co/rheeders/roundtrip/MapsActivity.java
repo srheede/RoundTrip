@@ -132,7 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinations.get(0).getLatLong()));
 //
-            String totalDis = "Total distance: " + (int) algorithm.getShortestDistance() + " km";
+            String totalDis = "Total distance: " + (int) Algorithm.shortestDistance + " km";
 
             MapsActivity.tvDistance.setText(totalDis);
 
@@ -165,8 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             case 1:
                                 Algorithm.addNextDestination();
                                 break;
-                            case 2:
-                                Algorithm.addNext();
+                            default:
                                 break;
                         }
                     }
@@ -178,7 +177,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onClick(View view) {
                     if (!rollbacks.isEmpty()){
                     Algorithm.enteredRoute = rollbacks.get(rollbacks.size() - 1).enteredRoute;
-                    Algorithm.shortestRoute = rollbacks.get(rollbacks.size() - 1).shortestRoute;
                     Algorithm.bubbleShrinkRoute = rollbacks.get(rollbacks.size() - 1).bubbleShrinkRoute;
                     Algorithm.parameterDiamondRoute = rollbacks.get(rollbacks.size() - 1).parameterDiamondRoute;
                     Algorithm.sortedLatitude = rollbacks.get(rollbacks.size() - 1).sortedLatitude;

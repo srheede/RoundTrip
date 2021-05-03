@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Rollback {
     ArrayList<Destination> enteredRoute;
-    ArrayList<Destination> shortestRoute;
     ArrayList<Destination> bubbleShrinkRoute;
     ArrayList<Destination> parameterDiamondRoute;
     ArrayList<Destination> sortedLatitude;
@@ -14,12 +13,27 @@ public class Rollback {
     double shortestDistance;
     Circle smallestCircle;
 
-    public Rollback(){
-        this.enteredRoute = new ArrayList<>(Algorithm.enteredRoute);
-        this.shortestRoute = new ArrayList<>(Algorithm.shortestRoute);
-        this.bubbleShrinkRoute = new ArrayList<>(Algorithm.bubbleShrinkRoute);
-        this.parameterDiamondRoute = new ArrayList<>(Algorithm.parameterDiamondRoute);
-        this.sortedLatitude = new ArrayList<>(Algorithm.sortedLatitude);
+    public Rollback() {
+        if (!Algorithm.enteredRoute.isEmpty()) {
+            this.enteredRoute = new ArrayList<>(Algorithm.enteredRoute);
+        } else {
+            this.enteredRoute = new ArrayList<>();
+        }
+        if (!Algorithm.bubbleShrinkRoute.isEmpty()) {
+            this.bubbleShrinkRoute = new ArrayList<>(Algorithm.bubbleShrinkRoute);
+        } else {
+            this.bubbleShrinkRoute = new ArrayList<>();
+        }
+        if (!Algorithm.parameterDiamondRoute.isEmpty()) {
+            this.parameterDiamondRoute = new ArrayList<>(Algorithm.parameterDiamondRoute);
+        } else {
+            this.parameterDiamondRoute = new ArrayList<>();
+        }
+        if (!Algorithm.sortedLatitude.isEmpty()) {
+            this.sortedLatitude = new ArrayList<>(Algorithm.sortedLatitude);
+        } else {
+            this.sortedLatitude = new ArrayList<>();
+        }
         this.bubbleShrinkDistance = Algorithm.bubbleShrinkDistance;
         this.parameterDiamondDistance = Algorithm.parameterDiamondDistance;
         this.shortestDistance = Algorithm.shortestDistance;

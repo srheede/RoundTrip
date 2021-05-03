@@ -7,10 +7,8 @@ import static za.co.rheeders.roundtrip.GeoHash.encodeHash;
 
 public class Destination implements Comparable {
     private double latitude;
-    private int sortingLatitude;
     private double longitude;
     private double distanceCenter;
-    private int sortingDistanceCenter;
     private String geoHash;
     private String placeId;
     private String placeName;
@@ -18,7 +16,6 @@ public class Destination implements Comparable {
 
     public Destination(double latitude, double longitude) {
         this.latitude = latitude;
-        this.sortingLatitude = (int) latitude * 10000000;
         this.longitude = longitude;
         this.geoHash = encodeHash(latitude, longitude, 12);
         this.latLong = new LatLng(latitude, longitude);
@@ -29,7 +26,6 @@ public class Destination implements Comparable {
         LatLong latLong = decodeHash(geoHash);
         this.geoHash = geoHash;
         this.latitude = latLong.getLat();
-        this.sortingLatitude = (int) latLong.getLat() * 10000000;
         this.longitude = latLong.getLon();
         this.latLong = new LatLng(latitude, longitude);
     }
@@ -37,15 +33,7 @@ public class Destination implements Comparable {
     @Override
     public int compareTo(Object other) {
         Destination destination = (Destination) other;
-        return this.sortingLatitude - destination.sortingLatitude;
-    }
-
-    public int getSortingDistanceCenter() {
-        return sortingDistanceCenter;
-    }
-
-    public void setSortingDistanceCenter(int sortingDistanceCenter) {
-        this.sortingDistanceCenter = sortingDistanceCenter;
+        return Double.compare(this.latitude, destination.latitude);
     }
 
     public double getDistanceCenter() {
@@ -54,7 +42,6 @@ public class Destination implements Comparable {
 
     public void setDistanceCenter(double distanceCenter) {
         this.distanceCenter = distanceCenter;
-        this.sortingDistanceCenter = (int) (distanceCenter * 10000000);
     }
 
     public LatLng getLatLong() {
