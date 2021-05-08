@@ -14,27 +14,13 @@ public class Rollback {
     Circle smallestCircle;
 
     public Rollback() {
-        if (!Algorithm.enteredRoute.isEmpty()) {
-            this.enteredRoute = new ArrayList<>(Algorithm.enteredRoute);
-        } else {
-            this.enteredRoute = new ArrayList<>();
-        }
-        if (!Algorithm.bubbleShrinkRoute.isEmpty()) {
+        if (MainActivity.switchAlgorithm == 0){
             this.bubbleShrinkRoute = new ArrayList<>(Algorithm.bubbleShrinkRoute);
-        } else {
-            this.bubbleShrinkRoute = new ArrayList<>();
+            this.bubbleShrinkDistance = Algorithm.bubbleShrinkDistance;
         }
-        if (!Algorithm.parameterDiamondRoute.isEmpty()) {
-            this.parameterDiamondRoute = new ArrayList<>(Algorithm.parameterDiamondRoute);
-        } else {
-            this.parameterDiamondRoute = new ArrayList<>();
-        }
-        if (!Algorithm.sortedLatitude.isEmpty()) {
-            this.sortedLatitude = new ArrayList<>(Algorithm.sortedLatitude);
-        } else {
-            this.sortedLatitude = new ArrayList<>();
-        }
-        this.bubbleShrinkDistance = Algorithm.bubbleShrinkDistance;
+        this.enteredRoute = new ArrayList<>(Algorithm.enteredRoute);
+        this.parameterDiamondRoute = new ArrayList<>(Algorithm.parameterDiamondRoute);
+        this.sortedLatitude = new ArrayList<>(Algorithm.sortedLatitude);
         this.parameterDiamondDistance = Algorithm.parameterDiamondDistance;
         this.shortestDistance = Algorithm.shortestDistance;
         this.smallestCircle = new Circle(Algorithm.smallestCircle);

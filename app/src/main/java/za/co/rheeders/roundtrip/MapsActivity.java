@@ -175,30 +175,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buttonPreviousStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!rollbacks.isEmpty()){
-                    Algorithm.enteredRoute = rollbacks.get(rollbacks.size() - 1).enteredRoute;
-                    Algorithm.bubbleShrinkRoute = rollbacks.get(rollbacks.size() - 1).bubbleShrinkRoute;
-                    Algorithm.parameterDiamondRoute = rollbacks.get(rollbacks.size() - 1).parameterDiamondRoute;
-                    Algorithm.sortedLatitude = rollbacks.get(rollbacks.size() - 1).sortedLatitude;
-                    Algorithm.bubbleShrinkDistance = rollbacks.get(rollbacks.size() - 1).bubbleShrinkDistance;
-                    Algorithm.parameterDiamondDistance = rollbacks.get(rollbacks.size() - 1).parameterDiamondDistance;
-                    Algorithm.shortestDistance = rollbacks.get(rollbacks.size() - 1).shortestDistance;
-                    Algorithm.smallestCircle = rollbacks.get(rollbacks.size() - 1).smallestCircle;
-                    rollbacks.remove(rollbacks.size() - 1);
-                    Algorithm.setMap();}
-//                    switch (MainActivity.switchAlgorithm) {
-//                        case 0:
-//                            if (!Algorithm.sortedLatitude.isEmpty()) {
-//                                Algorithm.rollbackPoint();
-//                            }
-//                            break;
-//                        case 1:
-//                            Algorithm.rollbackDestination();
-//                            break;
-//                        case 2:
-//                            Algorithm.rollback();
-//                            break;
-//                    }
+                    if (!rollbacks.isEmpty()) {
+                        if (MainActivity.switchAlgorithm == 0) {
+                            Algorithm.bubbleShrinkRoute = rollbacks.get(rollbacks.size() - 1).bubbleShrinkRoute;
+                            Algorithm.bubbleShrinkDistance = rollbacks.get(rollbacks.size() - 1).bubbleShrinkDistance;
+                        }
+                        Algorithm.enteredRoute = rollbacks.get(rollbacks.size() - 1).enteredRoute;
+                        Algorithm.parameterDiamondRoute = rollbacks.get(rollbacks.size() - 1).parameterDiamondRoute;
+                        Algorithm.sortedLatitude = rollbacks.get(rollbacks.size() - 1).sortedLatitude;
+                        Algorithm.parameterDiamondDistance = rollbacks.get(rollbacks.size() - 1).parameterDiamondDistance;
+                        Algorithm.shortestDistance = rollbacks.get(rollbacks.size() - 1).shortestDistance;
+                        Algorithm.smallestCircle = rollbacks.get(rollbacks.size() - 1).smallestCircle;
+                        rollbacks.remove(rollbacks.size() - 1);
+                        Algorithm.setMap();
+                    }
                 }
             });
 
