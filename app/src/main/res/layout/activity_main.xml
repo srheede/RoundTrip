@@ -86,4 +86,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="188dp"
+        android:layout_marginTop="133dp"
+        android:text="@string/startHere"
+        android:textColor="#B30606"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/radioGroupLoadOption"
+        app:layout_constraintTop_toTopOf="@+id/radioGroupLoadOption" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
