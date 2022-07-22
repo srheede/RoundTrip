@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/RoundTrip.iml" filepath="$PROJECT_DIR$/.idea/modules/RoundTrip.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RoundTrip.app.unitTest.iml" />
     </modules>
   </component>
 </project>
