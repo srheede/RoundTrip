@@ -9,13 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class EnterCoordinates extends AppCompatActivity {
 
@@ -73,7 +73,7 @@ public class EnterCoordinates extends AppCompatActivity {
         lat = lat.replace('°', ' ');
         Scanner scanLat = new Scanner(lat);
 
-        double doubleLat = 0;
+        Double doubleLat = 0.0;
         if (scanLat.hasNextDouble()) {
             doubleLat = scanLat.nextDouble();
             count++;
@@ -81,7 +81,7 @@ public class EnterCoordinates extends AppCompatActivity {
         while (scanLat.hasNext()) {
             String nextLat = scanLat.next();
             if (nextLat.charAt(0) == 'S' && doubleLat > 0) {
-                doubleLat = 0 - doubleLat;
+                doubleLat = 0.0 - doubleLat;
             }
         }
         scanLat.close();
@@ -91,7 +91,7 @@ public class EnterCoordinates extends AppCompatActivity {
         lon = lon.replace('°', ' ');
 
         Scanner scanLong = new Scanner(lon);
-        double doubleLong = 0;
+        Double doubleLong = 0.0;
         if (scanLong.hasNextDouble()) {
             doubleLong = scanLong.nextDouble();
             count++;
@@ -100,7 +100,7 @@ public class EnterCoordinates extends AppCompatActivity {
         while (scanLong.hasNext()) {
             String nextLong = scanLong.next();
             if (nextLong.charAt(0) == 'W' && doubleLong > 0) {
-                doubleLong = 0 - doubleLong;
+                doubleLong = 0.0 - doubleLong;
             }
         }
         scanLat.close();

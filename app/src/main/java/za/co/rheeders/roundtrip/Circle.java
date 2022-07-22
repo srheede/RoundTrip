@@ -2,14 +2,14 @@ package za.co.rheeders.roundtrip;
 
 public class Circle {
     Destination centerCoordinates;
-    double radius;
+    Double radius;
 
-    public Circle(double latitude, double longitude, double radius) {
+    public Circle(Double latitude, Double longitude, Double radius) {
         this.centerCoordinates = new Destination(latitude, longitude);
         this.radius = radius;
     }
 
-    public Circle(Destination destination, double radius) {
+    public Circle(Destination destination, Double radius) {
         this.centerCoordinates = destination;
         this.radius = radius;
     }
@@ -27,11 +27,11 @@ public class Circle {
         this.centerCoordinates = destination;
     }
 
-    public double getRadius() {
+    public Double getRadius() {
         return radius;
     }
 
-    public void setRadius(double radius) {
+    public void setRadius(Double radius) {
         this.radius = radius;
     }
 }

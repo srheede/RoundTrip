@@ -8,9 +8,9 @@ public class Rollback {
     ArrayList<Destination> parameterDiamondRoute;
     ArrayList<Destination> sortedLatitude;
 
-    double bubbleShrinkDistance;
-    double parameterDiamondDistance;
-    double shortestDistance;
+    Double bubbleShrinkDistance;
+    Double parameterDiamondDistance;
+    Double shortestDistance;
     Circle smallestCircle;
 
     public Rollback() {

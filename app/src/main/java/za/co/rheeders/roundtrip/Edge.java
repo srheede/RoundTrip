@@ -9,6 +9,7 @@ public class Edge implements Comparable{
     private final Double weight;
     private final Double gradient;
     private final Double intercept;
+    private boolean removed = false;
 
     public Edge(Destination vertexA, Destination vertexB){
         this.vertexA = vertexA;
@@ -44,12 +45,20 @@ public class Edge implements Comparable{
         return intercept;
     }
 
-    private static double distance(Destination destination1, Destination destination2) {
+    public boolean isRemoved() {
+        return removed;
+    }
 
-        double lat1 = destination1.getLatitude();
-        double lon1 = destination1.getLongitude();
-        double lat2 = destination2.getLatitude();
-        double lon2 = destination2.getLongitude();
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
+    private static Double distance(Destination destination1, Destination destination2) {
+
+        Double lat1 = destination1.getLatitude();
+        Double lon1 = destination1.getLongitude();
+        Double lat2 = destination2.getLatitude();
+        Double lon2 = destination2.getLongitude();
 
         // The math module contains a function
         // named toRadians which converts from
@@ -60,17 +69,17 @@ public class Edge implements Comparable{
         lat2 = Math.toRadians(lat2);
 
         // Haversine formula
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-        double a = pow(Math.sin(dlat / 2), 2)
+        Double dlon = lon2 - lon1;
+        Double dlat = lat2 - lat1;
+        Double a = pow(Math.sin(dlat / 2.0), 2)
                 + Math.cos(lat1) * Math.cos(lat2)
-                * pow(Math.sin(dlon / 2), 2);
+                * pow(Math.sin(dlon / 2.0), 2);
 
-        double c = 2 * Math.asin(sqrt(a));
+        Double c = 2.0 * Math.asin(sqrt(a));
 
         // Radius of earth in kilometers. Use 3956
         // for miles
-        double r = 6371;
+        Double r = 6371.0;
 
         // calculate the result
         return (c * r);

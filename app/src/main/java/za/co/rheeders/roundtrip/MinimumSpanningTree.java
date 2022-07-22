@@ -1,14 +1,16 @@
 package za.co.rheeders.roundtrip;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MinimumSpanningTree {
-    private ArrayList<Edge> Edges;
+    private ArrayList<Edge> Edges = new ArrayList<>();
 
     public MinimumSpanningTree(ArrayList<Destination> destinations) {
-        Edges = createAllPermutationsOfEdgesFromDestinations(destinations);
-        Edges = removeIntersectingEdges();
-//        sortEdgesByWeight();
+        createAllPermutationsOfEdgesFromDestinations(destinations);
+        sortEdgesByWeight();
+        removeIntersectingEdges();
 //        Edges = createMinimumSpanningTree();
     }
 
@@ -16,44 +18,65 @@ public class MinimumSpanningTree {
         return Edges;
     }
 
-    private ArrayList<Edge> createAllPermutationsOfEdgesFromDestinations(ArrayList<Destination> destinations) {
-        ArrayList<Edge> Edges = new ArrayList<>();
+    private void createAllPermutationsOfEdgesFromDestinations(ArrayList<Destination> destinations) {
         ArrayList<Destination> destinationsSublist = (ArrayList<Destination>) destinations.clone();
 
         for (Destination destinationA : destinations){
             destinationsSublist.remove(destinationA);
 
             for (Destination destinationB : destinationsSublist) {
-                Edges.add(new Edge(destinationA, destinationB));
+                if (!destinationA.equals(destinationB)) {
+                    Edges.add(new Edge(destinationA, destinationB));
+                }
             }
         }
-
-        return Edges;
     }
 
-    private ArrayList<Edge> removeIntersectingEdges() {
-        ArrayList<Edge> intersectingEdgesRemoved = (ArrayList<Edge>) Edges.clone();
-        ArrayList<Edge> newEdges = new ArrayList<>();
+    private void removeIntersectingEdges() {
+        ArrayList<Edge> removeIntersectingEdges = new ArrayList<>();
+        boolean breakPoint = false;
 
         for (Edge edgeA : Edges){
+            if(breakPoint){
+                break;
+            }
             for (Edge edgeB : Edges)
             {
-                if (!edgeA.equals(edgeB)) {
+                if (!(edgeA.equals(edgeB) || edgeA.isRemoved() || edgeB.isRemoved())) {
                     if (isIntersecting(edgeA, edgeB)) {
                         if (edgeA.getWeight() > edgeB.getWeight()) {
-                            intersectingEdgesRemoved.remove(edgeA);
+//                            if((edgeA.getVertexA().getPlaceName().equals("4") || edgeA.getVertexB().getPlaceName().equals("4")) && (edgeA.getVertexA().getPlaceName().equals("20") || edgeA.getVertexB().getPlaceName().equals("20"))){
+//                                System.out.println("PLACE NAME: " + edgeB.getVertexA().getPlaceName());
+//                                System.out.println("PLACE NAME: " + edgeB.getVertexB().getPlaceName());
+//                                breakPoint = true;
+//                                break;
+//                            }
+                            removeIntersectingEdges.add(edgeA);
+                            edgeA.setRemoved(true);
                         } else {
-                            intersectingEdgesRemoved.remove(edgeB);
+//                            if((edgeB.getVertexA().getPlaceName().equals("4") || edgeB.getVertexB().getPlaceName().equals("4")) && (edgeB.getVertexA().getPlaceName().equals("20") || edgeB.getVertexB().getPlaceName().equals("20"))){
+//                                System.out.println("PLACE NAME: " + edgeA.getVertexA().getPlaceName());
+//                                System.out.println("PLACE NAME: " + edgeA.getVertexB().getPlaceName());
+//                                breakPoint = true;
+//                                break;
+//                            }
+                            removeIntersectingEdges.add(edgeB);
+                            edgeB.setRemoved(true);
                         }
                     }
+                } else {
+                    System.out.println("yes");
                 }
             }
         }
 
-        return intersectingEdgesRemoved;
+        Edges.removeAll(removeIntersectingEdges);
     }
 
     private boolean isIntersecting(Edge edgeA, Edge edgeB) {
+        if (edgeA.getVertexA().equals(edgeB.getVertexA()) || edgeA.getVertexA().equals(edgeB.getVertexB()) || edgeA.getVertexB().equals(edgeB.getVertexA()) || edgeA.getVertexB().equals(edgeB.getVertexB())){
+            return false;
+        }
         Destination intersectingVertex = getIntersectingVertex(edgeA, edgeB);
         if (intersectingVertex == null){
             return false;
@@ -85,14 +108,14 @@ public class MinimumSpanningTree {
         return new Destination(latitude, longitude);
     }
 
-//    private void sortEdgesByWeight() {
-//        Collections.sort(Edges, new Comparator<Edge>() {
-//            @Override
-//            public int compare(Edge edge, Edge t1) {
-//                return Double.compare(edge.getWeight(), t1.getWeight());
-//            }
-//        });
-//    }
+    private void sortEdgesByWeight() {
+        Collections.sort(Edges, new Comparator<Edge>() {
+            @Override
+            public int compare(Edge edge, Edge t1) {
+                return Double.compare(t1.getWeight(), edge.getWeight());
+            }
+        });
+    }
 
 //    private ArrayList<Edge> createMinimumSpanningTree() {
 //        ArrayList<Destination> destinations = (ArrayList<Destination>) MainActivity.destinations.clone();

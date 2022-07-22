@@ -1,20 +1,20 @@
 package za.co.rheeders.roundtrip;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import static za.co.rheeders.roundtrip.GeoHash.decodeHash;
 import static za.co.rheeders.roundtrip.GeoHash.encodeHash;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Destination implements Comparable {
-    private double latitude;
-    private double longitude;
-    private double distanceCenter;
+    private Double latitude;
+    private Double longitude;
+    private Double distanceCenter;
     private String geoHash;
     private String placeId;
     private String placeName;
     private LatLng latLong;
 
-    public Destination(double latitude, double longitude) {
+    public Destination(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.geoHash = encodeHash(latitude, longitude, 12);
@@ -36,11 +36,11 @@ public class Destination implements Comparable {
         return Double.compare(this.latitude, destination.latitude);
     }
 
-    public double getDistanceCenter() {
+    public Double getDistanceCenter() {
         return distanceCenter;
     }
 
-    public void setDistanceCenter(double distanceCenter) {
+    public void setDistanceCenter(Double distanceCenter) {
         this.distanceCenter = distanceCenter;
     }
 
@@ -68,19 +68,19 @@ public class Destination implements Comparable {
         this.placeId = placeId;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 

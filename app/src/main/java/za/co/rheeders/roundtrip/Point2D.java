@@ -1,10 +1,10 @@
 package za.co.rheeders.roundtrip;
 
 public class Point2D {
-    public double x;
-    public double y;
+    public Double x;
+    public Double y;
 
-    public Point2D(double x, double y) {
+    public Point2D(Double x, Double y) {
         this.x = x;
         this.y = y;
     }
@@ -13,14 +13,14 @@ public class Point2D {
         return Math.abs(p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) == 0.0;
     }
 
-    public double distanceSquaredTo(final Point2D p) {
-        final double DX = x - p.x;
-        final double DY = y - p.y;
+    public Double distanceSquaredTo(final Point2D p) {
+        final Double DX = x - p.x;
+        final Double DY = y - p.y;
 
         return DX * DX + DY * DY;
     }
 
-    public double distanceTo(final Point2D p) {
+    public Double distanceTo(final Point2D p) {
         return Math.sqrt(distanceSquaredTo(p));
     }
 
