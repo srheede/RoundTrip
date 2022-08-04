@@ -13,6 +13,7 @@ public class Destination implements Comparable {
     private String placeId;
     private String placeName;
     private LatLng latLong;
+    public int edgeDegrees = 0;
 
     public Destination(Double latitude, Double longitude) {
         this.latitude = latitude;
@@ -91,5 +92,4 @@ public class Destination implements Comparable {
     public void setGeoHash(String geoHash) {
         this.geoHash = geoHash;
     }
-
 }
