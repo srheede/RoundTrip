@@ -1,11 +1,15 @@
 package za.co.rheeders.roundtrip;
 
+import static za.co.rheeders.roundtrip.Algorithm.enteredRoute;
+
 import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,10 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.fragment.app.FragmentActivity;
-
-import static za.co.rheeders.roundtrip.Algorithm.enteredRoute;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -132,6 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinations.get(0).getLatLong()));
 //
+
             String totalDis = "Total distance: " + (int) Algorithm.shortestDistance + " km";
 
             MapsActivity.tvDistance.setText(totalDis);

@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class ChristofidesAlgorithm {
     private ArrayList<Edge> Edges = new ArrayList<>();
-    private ArrayList<Edge> intersectingEdges = new ArrayList<>();
     private ArrayList<ArrayList<Destination>> MSTParents = new ArrayList<>();
     private ArrayList<Destination> visitedMatchingDestinations = new ArrayList<>();
     private int count = 0;
@@ -20,7 +19,7 @@ public class ChristofidesAlgorithm {
     public ChristofidesAlgorithm() {
         minimumSpanningTree();
         addMinimumCostPerfectMatching();
-        createEulerianTour();
+//        createEulerianTour();
         takeShortcuts();
     }
 
@@ -93,15 +92,11 @@ public class ChristofidesAlgorithm {
             destination.edgeDegrees += Edges.stream().filter(edge -> edge.getVertexA().equals(destination)).count();
             destination.edgeDegrees += Edges.stream().filter(edge -> edge.getVertexB().equals(destination)).count();
             if (destination.edgeDegrees == 4){
-                findExtraEdges(destination);
+                ArrayList<Edge> affectedEdges = Edges.stream().filter(edge -> edge.getVertexA().equals(destination) || edge.getVertexB().equals(destination)).collect(Collectors
+                        .toCollection(ArrayList::new));
+                findMatchingEdges(affectedEdges, destination);
             }
         }
-    }
-
-    private void findExtraEdges(Destination destination) {
-        ArrayList<Edge> affectedEdges = Edges.stream().filter(edge -> edge.getVertexA().equals(destination) || edge.getVertexB().equals(destination)).collect(Collectors
-                    .toCollection(ArrayList::new));
-        findMatchingEdges(affectedEdges, destination);
     }
 
     private void findMatchingEdges(ArrayList<Edge> affectedEdges, Destination start) {
@@ -133,6 +128,7 @@ public class ChristofidesAlgorithm {
                 break;
             }
         }
+
         createShortcut(start, startingEdge, nextEdge, affectedEdges);
     }
 
@@ -141,6 +137,7 @@ public class ChristofidesAlgorithm {
         affectedEdges.remove(matchingEdge);
         ArrayList<Improvement> list = new ArrayList<>();
 
+
         list.add(new Improvement(startingEdge, affectedEdges.get(0), center));
         list.add(new Improvement(startingEdge, affectedEdges.get(1), center));
         list.add(new Improvement(matchingEdge, affectedEdges.get(0), center));
@@ -148,9 +145,36 @@ public class ChristofidesAlgorithm {
 
         Collections.sort(list);
 
-        Edges.remove(list.get(0).getEdgeA());
-        Edges.remove(list.get(0).getEdgeB());
-        Edges.add(list.get(0).getNewEdge());
+        int i = 0;
+
+        while (list.get(i).getNewEdge().getWeight() == 0.0) {
+            i++;
+        }
+//        int count = 0;
+//        while (i < list.size()){
+//
+//            if (list.get(i).getNewEdge().getWeight() == 0.0) {
+//                i++;
+//            } else {
+//
+//                for (Edge edgeB : Edges) {
+//                    if (!list.get(i).getNewEdge().equals(edgeB) && isIntersecting(list.get(i).getNewEdge(), edgeB)) {
+//                        i++;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (i == count){
+//                break ;
+//            }
+//            count++;
+//        }
+
+//        if (i != list.size()) {
+            Edges.remove(list.get(i).getEdgeA());
+            Edges.remove(list.get(i).getEdgeB());
+            Edges.add(list.get(i).getNewEdge());
+//        }
     }
 
     private void minimumSpanningTree(){
@@ -178,7 +202,6 @@ public class ChristofidesAlgorithm {
 //        for (Destination destination : oddDegreeVertices) {
 //            System.out.println("PLACE NAME: " + destination.getPlaceName());
 //            MapsActivity.map.addMarker(new MarkerOptions().position(destination.getLatLong()).title(destination.getPlaceName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon_black)));
-//
 //        }
 
         ArrayList<Edge> possibleEdges = createAllPermutationsOfEdgesFromDestinations(oddDegreeVertices);
@@ -190,7 +213,7 @@ public class ChristofidesAlgorithm {
                     .toCollection(ArrayList::new)));
         }
 
-        Map<ArrayList<Edge>, Double> map = new HashMap<>();
+        Map<Double, PossibleEdgeSet> map = new HashMap<>();
 
         for (ArrayList<Edge> possibleEdgeSet : possibleEdgeSets){
 
@@ -200,18 +223,34 @@ public class ChristofidesAlgorithm {
                 totalWeight += possibleEdge.getWeight();
             }
 
-            map.put(possibleEdgeSet, totalWeight);
+            ArrayList<Edge> intersectingEdges = new ArrayList<>();
+
+            for (Edge edgeA : possibleEdgeSet){
+                for (Edge edgeB : Edges){
+                    if (!edgeA.equals(edgeB) && isIntersecting(edgeA, edgeB)){
+                        intersectingEdges.add(edgeA);
+                        break;
+                    }
+                }
+            }
+
+            PossibleEdgeSet edgeSet = new PossibleEdgeSet(possibleEdgeSet, getDestinationAsKey(possibleEdgeSet));
+
+//            edgeSet.getPossibleEdgeSet().removeAll(intersectingEdges);
+
+            map.put(totalWeight, edgeSet);
         }
 
         LinkedHashMap<Destination, ArrayList<Edge>> sortedMap = new LinkedHashMap<>();
 
         map.entrySet()
                 .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEachOrdered(x -> sortedMap.put(getKeyDestination(x.getKey()), x.getKey()));
+                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+                .forEachOrdered(x -> sortedMap.put(x.getValue().getDestinationAsKey(), x.getValue().getPossibleEdgeSet()));
+
+//        Edges = new ArrayList<>();
 
         recursiveMatching(sortedMap);
-
 
 //        sortEdgesByWeight(possibleEdges);
 //
@@ -239,7 +278,7 @@ public class ChristofidesAlgorithm {
 //        Edges.addAll(minimumCostPerfectMatching);
     }
 
-    private Destination getKeyDestination(ArrayList<Edge> nextDestination) {
+    private Destination getDestinationAsKey(ArrayList<Edge> nextDestination) {
         if (nextDestination.get(0).getVertexA().equals(nextDestination.get(1).getVertexA()) || nextDestination.get(0).getVertexA().equals(nextDestination.get(1).getVertexB())){
             return nextDestination.get(0).getVertexA();
         } else {
@@ -260,11 +299,18 @@ public class ChristofidesAlgorithm {
 
         for (int i = 0; i < nextDestination.size(); i++) {
             if (!(visitedMatchingDestinations.contains(nextDestination.get(i).getVertexA()) || visitedMatchingDestinations.contains(nextDestination.get(i).getVertexB()))) {
+//                if((nextDestination.get(i).getVertexA().getPlaceName().equals("22") || nextDestination.get(i).getVertexB().getPlaceName().equals("22")) ) {
+//                    System.out.println("PLACE NAME: ");
+//
+//                }
                 Edges.add(nextDestination.get(i));
+
                 visitedMatchingDestinations.add(nextDestination.get(i).getVertexA());
                 visitedMatchingDestinations.add(nextDestination.get(i).getVertexB());
                 sortedMap.remove(nextDestination.get(i).getVertexA());
                 sortedMap.remove(nextDestination.get(i).getVertexB());
+
+                break ;
             }
         }
 
@@ -289,58 +335,68 @@ public class ChristofidesAlgorithm {
         return newEdges;
     }
 
-    private void removeIntersectingEdges() {
-        boolean breakPoint = false;
+//    private void removeIntersectingEdges(ArrayList<Edge> edges) {
+//        intersectingEdges = new ArrayList<>();
+//        for (Edge edgeA : Edges) {
+//            for (Edge edgeB : edges) {
+//                if (!edgeA.equals(edgeB) && isIntersecting(edgeA, edgeB)) {
+//                    intersectingEdges.add(edgeB);
+//                }
+//            }
+//        }
 
-        for (Edge edgeA : Edges){
-            if(breakPoint){
-                break;
-            }
-            for (Edge edgeB : Edges)
-            {
-                if((edgeA.getVertexA().getPlaceName().equals("5") || edgeA.getVertexB().getPlaceName().equals("5")) && (edgeA.getVertexA().getPlaceName().equals("11") || edgeA.getVertexB().getPlaceName().equals("11"))){
-                    if((edgeB.getVertexA().getPlaceName().equals("17") || edgeB.getVertexB().getPlaceName().equals("17")) && (edgeB.getVertexA().getPlaceName().equals("19") || edgeB.getVertexB().getPlaceName().equals("19"))) {
-                        System.out.println("PLACE NAME: " + edgeB.getVertexA().getPlaceName());
-                        System.out.println("PLACE NAME: " + edgeB.getVertexB().getPlaceName());
-                    }
-                }
-                if (!(edgeA.equals(edgeB) || edgeA.isRemoved() || edgeB.isRemoved())) {
-                    if (isIntersecting(edgeA, edgeB)) {
-                        if (edgeA.getWeight() > edgeB.getWeight()) {
-                            if((edgeA.getVertexA().getPlaceName().equals("5") || edgeA.getVertexB().getPlaceName().equals("5")) && (edgeA.getVertexA().getPlaceName().equals("11") || edgeA.getVertexB().getPlaceName().equals("11"))){
-                                System.out.println("PLACE NAME: " + edgeB.getVertexA().getPlaceName());
-                                System.out.println("PLACE NAME: " + edgeB.getVertexB().getPlaceName());
-                                breakPoint = true;
-                                break;
-                            }
-                            intersectingEdges.add(edgeA);
-                            edgeA.setRemoved(true);
-                        } else {
+//        boolean breakPoint = false;
+//
+//        for (Edge edgeA : Edges){
+//            if(breakPoint){
+//                break;
+//            }
+//            for (Edge edgeB : edges)
+//            {
+//                if((edgeA.getVertexA().getPlaceName().equals("5") || edgeA.getVertexB().getPlaceName().equals("5")) && (edgeA.getVertexA().getPlaceName().equals("11") || edgeA.getVertexB().getPlaceName().equals("11"))){
+//                    if((edgeB.getVertexA().getPlaceName().equals("17") || edgeB.getVertexB().getPlaceName().equals("17")) && (edgeB.getVertexA().getPlaceName().equals("19") || edgeB.getVertexB().getPlaceName().equals("19"))) {
+//                        System.out.println("PLACE NAME: " + edgeB.getVertexA().getPlaceName());
+//                        System.out.println("PLACE NAME: " + edgeB.getVertexB().getPlaceName());
+//                    }
+//                }
+//                if (!(edgeA.equals(edgeB) || edgeA.isRemoved() || edgeB.isRemoved())) {
+//                    if (isIntersecting(edgeA, edgeB)) {
+//                        if (edgeA.getWeight() > edgeB.getWeight()) {
+//                            if((edgeA.getVertexA().getPlaceName().equals("5") || edgeA.getVertexB().getPlaceName().equals("5")) && (edgeA.getVertexA().getPlaceName().equals("11") || edgeA.getVertexB().getPlaceName().equals("11"))){
+//                                System.out.println("PLACE NAME: " + edgeB.getVertexA().getPlaceName());
+//                                System.out.println("PLACE NAME: " + edgeB.getVertexB().getPlaceName());
+//                                breakPoint = true;
+//                                break;
+//                            }
+//                            intersectingEdges.add(edgeB);
+//                            edgeB.setRemoved(true);
+//                        } else {
+//
+//                            intersectingEdges.add(edgeB);
+//                            edgeB.setRemoved(true);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        edges.remove(intersectingEdges);
+//        return edges;
+//    }
 
-                            intersectingEdges.add(edgeB);
-                            edgeB.setRemoved(true);
-                        }
-                    }
-                }
-            }
-        }
-
-        Edges.removeAll(intersectingEdges);
-    }
-
-    private void readdNonIntersectingEdges() {
-        for (Edge edgeA : intersectingEdges) {
-            int count = 0;
-            for (Edge edgeB : Edges) {
-                if (isIntersecting(edgeA, edgeB)) {
-                    count++;
-                }
-            }
-            if (count == 0){
-                Edges.add(edgeA);
-            }
-        }
-    }
+//    private void readdNonIntersectingEdges() {
+//        for (Edge edgeA : intersectingEdges) {
+//            int count = 0;
+//            for (Edge edgeB : Edges) {
+//                if (isIntersecting(edgeA, edgeB)) {
+//                    count++;
+//                }
+//            }
+//            if (count == 0){
+//                Edges.add(edgeA);
+//            }
+//        }
+//    }
 
     private boolean isIntersecting(Edge edgeA, Edge edgeB) {
         if (edgeA.getVertexA().equals(edgeB.getVertexA()) || edgeA.getVertexA().equals(edgeB.getVertexB()) || edgeA.getVertexB().equals(edgeB.getVertexA()) || edgeA.getVertexB().equals(edgeB.getVertexB())){

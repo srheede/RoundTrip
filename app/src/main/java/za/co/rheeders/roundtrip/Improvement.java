@@ -22,6 +22,9 @@ public class Improvement implements Comparable {
     }
 
     private void createEdge() {
+        if (edgeA.compareTo(edgeB) == 0){
+            System.out.println("here");
+        }
         if (edgeA.getVertexA().equals(center)){
             if(edgeB.getVertexA().equals(center)){
                 newEdge = new Edge(edgeA.getVertexB(), edgeB.getVertexB());

@@ -6,24 +6,28 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 public class LoadCoordinates extends AppCompatActivity {
 
@@ -130,7 +134,8 @@ public class LoadCoordinates extends AppCompatActivity {
     private void readText(String input, int requestCode) {
         File file = new File(input);
         try {
-            FileReader fileReader = new FileReader(Environment.getExternalStorageDirectory().toString() + "/" + file);
+//            String fileName = Environment.getExternalStorageDirectory().toString() + "/" + file;
+            FileReader fileReader = new FileReader(file);
             BufferedReader br = new BufferedReader(fileReader);
             String line;
             while ((line = br.readLine()) != null) {
@@ -187,8 +192,9 @@ public class LoadCoordinates extends AppCompatActivity {
                 }
             }
             br.close();
+            tv_output.setText(MainActivity.filePath + "\n\nsuccessfully loaded." );
         } catch (IOException e) {
-            e.printStackTrace();
+            tv_output.setText(e.toString());
         }
     }
 
@@ -196,8 +202,29 @@ public class LoadCoordinates extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/*");
-        startActivityForResult(intent, requestCode);
+        readFileActivityResultLauncher.launch(intent);
+//        startActivityForResult(intent, requestCode);
     }
+
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    ActivityResultLauncher<Intent> readFileActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Uri uri = data.getData();
+                            MainActivity.filePath = uri.getPath();
+                            MainActivity.filePath = MainActivity.filePath.substring(MainActivity.filePath.indexOf(":") + 1);
+                            readText(MainActivity.filePath, READ_REQUEST_CODE);
+                        }
+                    }
+                }
+            });
+
 
     public void checkPermission(String permission, int requestCode) {
         // Checking if permission is not granted
@@ -211,8 +238,12 @@ public class LoadCoordinates extends AppCompatActivity {
         try {
             String path = "/storage/emulated/0/Download/PlacesCoordinates" + MainActivity.destinations.size() + ".txt";
             FileWriter fileWriter = new FileWriter(path);
+            ArrayList<Destination> addedDestinations = new ArrayList<>();
             for (Destination destination : MainActivity.destinations) {
-                fileWriter.write("destination = new Destination(" + destination.getLatitude() + "," + destination.getLongitude() + ");\nMainActivity.destinations.add(destination);\n");
+                if (!addedDestinations.stream().anyMatch(addedDestination -> addedDestination.compareTo(destination) == 0)) {
+                    fileWriter.write("destination = new Destination(" + destination.getLatitude() + "," + destination.getLongitude() + ");\nMainActivity.destinations.add(destination);\n");
+                    addedDestinations.add(destination);
+                }
             }
             fileWriter.close();
             System.out.println("Successfully wrote to the file.");
