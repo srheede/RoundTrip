@@ -12,15 +12,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadGeoHash extends AppCompatActivity {
 
@@ -45,7 +45,7 @@ public class LoadGeoHash extends AppCompatActivity {
         tv_output = findViewById(R.id.tv_output);
         tv_output_short = findViewById(R.id.tv_output_short);
         Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);
-        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteBubbleShrink);
+        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteShrinkCycle);
         Button buttonCalcRouteCombo = findViewById(R.id.buttonCalcRouteCombo);
 
         buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {

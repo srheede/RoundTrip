@@ -53,11 +53,12 @@ public class LoadCoordinates extends AppCompatActivity {
         Button loadShort = findViewById(R.id.buttonLoadShort);
         tv_output = findViewById(R.id.tv_output);
         tv_output_short = findViewById(R.id.tv_output_short);
+        Button buttonCalcRouteChristofides = findViewById(R.id.buttonCalcRouteChristofides);
         Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);
-        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteBubbleShrink);
+        Button buttonCalcRouteShrinkCycle = findViewById(R.id.buttonCalcRouteShrinkCycle);
         Button buttonCalcRouteCombo = findViewById(R.id.buttonCalcRouteCombo);
 
-        buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
+        buttonCalcRouteShrinkCycle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveFile();
@@ -74,7 +75,7 @@ public class LoadCoordinates extends AppCompatActivity {
             }
         });
 
-        buttonCalcRouteCombo.setOnClickListener(new View.OnClickListener() {
+        buttonCalcRouteChristofides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity.switchAlgorithm = 2;

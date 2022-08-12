@@ -15,13 +15,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
 import java.util.ArrayList;
@@ -90,7 +94,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
 //            PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
 
-            Algorithm algorithm = new Algorithm(MainActivity.destinations);
+            if (MainActivity.switchAlgorithm == 2){
+                setMap();
+            } else {
+                Algorithm algorithm = new Algorithm(MainActivity.destinations);
+            }
 //            for (Destination destination : algorithm.getShortestRoute()) {
 //                try {
 //                    polylineOptions.add(destination.getLatLong());
@@ -133,9 +141,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.destinations.get(0).getLatLong()));
 //
 
-            String totalDis = "Total distance: " + (int) Algorithm.shortestDistance + " km";
-
-            MapsActivity.tvDistance.setText(totalDis);
+//            String totalDis = "Total distance: " + (int) Algorithm.shortestDistance + " km";
+//
+//            MapsActivity.tvDistance.setText(totalDis);
 
             tvDistance.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -214,6 +222,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+    }
+
+    private void setMap() {
+
+        MapsActivity.map.clear();
+
+        PolygonOptions polygonOptions = new PolygonOptions().clickable(false);
+
+        for (Destination destination : MainActivity.destinations){
+
+            polygonOptions.add(destination.getLatLong());
+
+            MapsActivity.map.addMarker(new MarkerOptions().position(destination.getLatLong()).title(destination.getPlaceName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)).alpha(0.5f));
+        }
+
+        ChristofidesAlgorithm christofidesAlgorithm = new ChristofidesAlgorithm();
+        double shortestDistance = 0.0;
+        for (Edge edge : christofidesAlgorithm.getEdges()) {
+            shortestDistance += edge.getWeight();
+            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
+            polylineOptions.add(edge.getVertexA().getLatLong());
+            polylineOptions.add(edge.getVertexB().getLatLong());
+            Polyline polyline = MapsActivity.map.addPolyline(polylineOptions);
+        }
+
+        String totalDis = "Total distance: " + (int) shortestDistance + " km";
+
+        MapsActivity.tvDistance.setText(totalDis);
     }
 
     private double distancePointToLine(Destination point, Destination segmentPointA, Destination segmentPointB) {

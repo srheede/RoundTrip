@@ -21,8 +21,9 @@ public class UseExample extends AppCompatActivity {
         examples = findViewById(R.id.radioGroupExamples);
 
         Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);
-        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteBubbleShrink);
+        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteShrinkCycle);
         Button buttonCalcRouteCombo = findViewById(R.id.buttonCalcRouteCombo);
+        Button buttonCalcRouteChristofides = findViewById(R.id.buttonCalcRouteChristofides);
 
         buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +43,7 @@ public class UseExample extends AppCompatActivity {
             }
         });
 
-        buttonCalcRouteCombo.setOnClickListener(new View.OnClickListener() {
+        buttonCalcRouteChristofides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectExample();

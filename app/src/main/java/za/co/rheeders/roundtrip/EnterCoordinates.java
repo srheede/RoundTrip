@@ -34,7 +34,7 @@ public class EnterCoordinates extends AppCompatActivity {
         textViewAdded = findViewById(R.id.textViewAdded);
         Button buttonAddCo = findViewById(R.id.buttonAddCo);
         Button buttonCalcRouteParameterDiamond = findViewById(R.id.buttonCalcRouteParameterDiamond);
-        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteBubbleShrink);
+        Button buttonCalcRouteBubbleShrink = findViewById(R.id.buttonCalcRouteShrinkCycle);
         Button buttonCalcRouteCombo = findViewById(R.id.buttonCalcRouteCombo);
 
         buttonCalcRouteBubbleShrink.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +63,6 @@ public class EnterCoordinates extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
         });
-
     }
 
     private void addCoordinates() {

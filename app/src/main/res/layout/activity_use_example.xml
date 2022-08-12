@@ -11,16 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:text="Please select an algorithm:"
-        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteBubbleShrink"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteChristofides"
         app:layout_constraintStart_toStartOf="@+id/radioGroupExamples" />
 
     <Button
         android:id="@+id/buttonCalcRouteParameterDiamond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="100dp"
         android:text="Calculate Route (Parameter Diamond)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,17 +34,26 @@
         android:layout_marginBottom="10dp"
         android:text="Calculate Route (Combo)"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteBubbleShrink"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteShrinkCycle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonCalcRouteBubbleShrink"
+        android:id="@+id/buttonCalcRouteShrinkCycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:text="Calculate Route (Bubble Shrink)"
+        android:text="Calculate Route (Shrink Cycle)"
         app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteParameterDiamond"
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond" />
+
+    <Button
+        android:id="@+id/buttonCalcRouteChristofides"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Calculate Route (Christofides)"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteShrinkCycle"
         app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond" />
 
     <RadioGroup
@@ -52,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteBubbleShrink"
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteShrinkCycle"
         app:layout_constraintTop_toBottomOf="@+id/textViewSelectFileGeo">
 
         <RadioButton

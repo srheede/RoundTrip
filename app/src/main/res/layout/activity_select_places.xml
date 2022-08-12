@@ -33,12 +33,12 @@
         android:layout_marginBottom="10dp"
         android:text="Calculate Route (Combo)"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteBubbleShrink"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteShrinkCycle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonCalcRouteBubbleShrink"
+        android:id="@+id/buttonCalcRouteShrinkCycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
