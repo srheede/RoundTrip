@@ -61,7 +61,6 @@ public class LoadCoordinates extends AppCompatActivity {
         buttonCalcRouteShrinkCycle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveFile();
                 MainActivity.switchAlgorithm = 0;
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
@@ -135,7 +134,7 @@ public class LoadCoordinates extends AppCompatActivity {
     private void readText(String input, int requestCode) {
         File file = new File(input);
         try {
-//            String fileName = Environment.getExternalStorageDirectory().toString() + "/" + file;
+            MainActivity.destinations.clear();
             FileReader fileReader = new FileReader(file);
             BufferedReader br = new BufferedReader(fileReader);
             String line;
@@ -193,7 +192,8 @@ public class LoadCoordinates extends AppCompatActivity {
                 }
             }
             br.close();
-            tv_output.setText(MainActivity.filePath + "\n\nsuccessfully loaded." );
+//            saveFile(file);
+            tv_output.setText(MainActivity.filePath + "\n\nsuccessfully loaded.");
         } catch (IOException e) {
             tv_output.setText(e.toString());
         }
@@ -234,22 +234,22 @@ public class LoadCoordinates extends AppCompatActivity {
         }
     }
 
-    private void saveFile() {
+    private void saveFile(File filePath) {
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
         try {
             String path = "/storage/emulated/0/Download/PlacesCoordinates" + MainActivity.destinations.size() + ".txt";
-            FileWriter fileWriter = new FileWriter(path);
+            FileWriter fileWriter = new FileWriter(filePath);//.getPath().substring(0, filePath.getPath().length() - filePath.getName().length()) + "CopyOf" + filePath.getName().toLowerCase().substring(0, filePath.getName().length()));
             ArrayList<Destination> addedDestinations = new ArrayList<>();
             for (Destination destination : MainActivity.destinations) {
-                if (!addedDestinations.stream().anyMatch(addedDestination -> addedDestination.compareTo(destination) == 0)) {
+//                if (!addedDestinations.stream().anyMatch(addedDestination -> addedDestination.compareTo(destination) == 0)) {
                     fileWriter.write("destination = new Destination(" + destination.getLatitude() + "," + destination.getLongitude() + ");\nMainActivity.destinations.add(destination);\n");
                     addedDestinations.add(destination);
-                }
+//                }
             }
             fileWriter.close();
-            System.out.println("Successfully wrote to the file.");
+            tv_output.setText(MainActivity.filePath + "\n\nsuccessfully updated.");
         } catch (IOException e) {
-            System.out.println(e);
+            tv_output.setText("Exception: " + e.toString());
         }
     }
 }

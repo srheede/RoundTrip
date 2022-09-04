@@ -14,7 +14,7 @@
         android:layout_marginBottom="30dp"
         android:text="Please select an algorithm:"
         app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteChristofides"
-        app:layout_constraintStart_toStartOf="@+id/radioGroupExamples" />
+        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteChristofides" />
 
     <Button
         android:id="@+id/buttonCalcRouteParameterDiamond"
@@ -56,33 +56,15 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonCalcRouteShrinkCycle"
         app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteParameterDiamond" />
 
-    <RadioGroup
-        android:id="@+id/radioGroupExamples"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinnerCitiesList"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="@+id/buttonCalcRouteShrinkCycle"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSelectFileGeo">
-
-        <RadioButton
-            android:id="@+id/radioButton29"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Western Sahara - 29 Cities" />
-
-        <RadioButton
-            android:id="@+id/radioButton38"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Djibouti - 38 Cities" />
-
-        <RadioButton
-            android:id="@+id/radioButton980"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Luxembourg - 980 Cities (Can Take Long)" />
-
-    </RadioGroup>
+        android:layout_marginTop="30dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="@+id/textViewSelectFileGeo"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectFileGeo" />
 
     <TextView
         android:id="@+id/textViewSelectFileGeo"
@@ -91,7 +73,7 @@
         android:layout_gravity="top"
         android:text="@string/select_example"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/radioGroupExamples"
+        app:layout_constraintStart_toStartOf="@+id/textViewSelectFileGeo2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.15" />
 

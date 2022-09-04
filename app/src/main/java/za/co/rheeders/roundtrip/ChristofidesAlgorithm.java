@@ -1,5 +1,8 @@
 package za.co.rheeders.roundtrip;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,17 +13,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ChristofidesAlgorithm {
+    private ArrayList<DestinationLite> destinationsLite = new ArrayList<>();
     private ArrayList<Edge> Edges = new ArrayList<>();
+    private ArrayList<EdgeLite> EdgesLite = new ArrayList<>();
     private ArrayList<ArrayList<Destination>> MSTParents = new ArrayList<>();
+    private ArrayList<ArrayList<DestinationLite>> MSTParentsLite = new ArrayList<>();
     private ArrayList<Destination> visitedMatchingDestinations = new ArrayList<>();
     private int count = 0;
 
 
     public ChristofidesAlgorithm() {
-        minimumSpanningTree();
-        addMinimumCostPerfectMatching();
+        minimumSpanningTree_LowMemoryUsage();
+//        addMinimumCostPerfectMatching();
 //        createEulerianTour();
-        takeShortcuts();
+//        takeShortcuts();
     }
 
     private void createEulerianTour() {
@@ -188,6 +194,24 @@ public class ChristofidesAlgorithm {
         createMinimumSpanningTree();
     }
 
+    private void minimumSpanningTree_LowMemoryUsage(){
+        for (Destination destination : MainActivity.destinations){
+            destinationsLite.add(new DestinationLite(destination.getLatitude(), destination.getLongitude()));
+        }
+        EdgesLite = createAllPermutationsOfEdgesFromDestinationsLite(destinationsLite);
+        sortEdgesByWeightLite(EdgesLite);
+//        Collections.reverse(Edges);
+//        removeIntersectingEdges();
+//        sortEdgesByWeight(intersectingEdges);
+//        readdNonIntersectingEdges();
+//        sortEdgesByWeight(Edges);
+        createMinimumSpanningTreeLite();
+
+        for (EdgeLite edge : EdgesLite){
+            Edges.add(new Edge(new Destination(edge.vertexA.latitude, edge.vertexA.longitude), new Destination(edge.vertexB.latitude, edge.vertexB.longitude)));
+        }
+    }
+
     private void addMinimumCostPerfectMatching() {
         ArrayList<Destination> oddDegreeVertices = new ArrayList<>();
         for (Destination destination : MainActivity.destinations) {
@@ -318,8 +342,8 @@ public class ChristofidesAlgorithm {
         }
     }
 
-
     private ArrayList<Edge> createAllPermutationsOfEdgesFromDestinations(ArrayList<Destination> destinations) {
+
         ArrayList<Destination> destinationsSublist = (ArrayList<Destination>) destinations.clone();
         ArrayList<Edge> newEdges = new ArrayList<>();
 
@@ -333,6 +357,145 @@ public class ChristofidesAlgorithm {
             }
         }
         return newEdges;
+    }
+
+    private ArrayList<EdgeLite> createAllPermutationsOfEdgesFromDestinationsLite(ArrayList<DestinationLite> destinations) {
+
+        ArrayList<DestinationLite> destinationsSublist = (ArrayList<DestinationLite>) destinations.clone();
+        ArrayList<EdgeLite> newEdges = new ArrayList<>();
+
+        for (DestinationLite destinationA : destinations){
+            destinationsSublist.remove(destinationA);
+
+            for (DestinationLite destinationB : destinationsSublist) {
+                if (!destinationA.equals(destinationB)) {
+                    newEdges.add(new EdgeLite(destinationA, destinationB));
+                }
+            }
+        }
+        return newEdges;
+    }
+
+    private void createMinimumSpanningTree() {
+        ArrayList<Edge> MST = new ArrayList<>();
+        for (Destination destination : MainActivity.destinations){
+            ArrayList<Destination> newSet = new ArrayList<Destination>();
+            newSet.add(destination);
+            MSTParents.add(newSet);
+        }
+        for ( Edge edge : Edges){
+            if (!find(edge.getVertexA()).equals(find(edge.getVertexB()))){
+                MST.add(edge);
+                mergeParents(edge.getVertexA(), edge.getVertexB());
+            }
+        }
+        Edges = MST;
+    }
+
+    private void createMinimumSpanningTreeLite() {
+        ArrayList<EdgeLite> MST = new ArrayList<>();
+        for(DestinationLite destination: destinationsLite){
+            ArrayList<DestinationLite> newSet = new ArrayList<DestinationLite>();
+            newSet.add(destination);
+            MSTParentsLite.add(newSet);
+        }
+        for (EdgeLite edge : EdgesLite){
+            if (!findLite(edge.vertexA).equals(findLite(edge.vertexB))){
+                MST.add(edge);
+                mergeParentsLite(edge.vertexA, edge.vertexB);
+            }
+        }
+        EdgesLite = MST;
+    }
+
+    private void mergeParents(Destination vertexA, Destination vertexB) {
+        ArrayList<Destination> setA = null;
+
+        for (ArrayList<Destination> parentSet : MSTParents){
+            if (parentSet.contains(vertexA)){
+                setA = parentSet;
+                break;
+            }
+        }
+
+        for (ArrayList<Destination> parentSet : MSTParents){
+            if (parentSet.contains(vertexB)){
+                parentSet.addAll(setA);
+            }
+        }
+        MSTParents.remove(setA);
+    }
+
+    private void mergeParentsLite(DestinationLite vertexA, DestinationLite vertexB) {
+        ArrayList<DestinationLite> setA = null;
+
+        for (ArrayList<DestinationLite> parentSet : MSTParentsLite){
+            if (parentSet.contains(vertexA)){
+                setA = parentSet;
+                break;
+            }
+        }
+
+        for (ArrayList<DestinationLite> parentSet : MSTParentsLite){
+            if (parentSet.contains(vertexB)){
+                parentSet.addAll(setA);
+            }
+        }
+        MSTParentsLite.remove(setA);
+    }
+
+    private ArrayList<Destination> find(Destination destination) {
+
+        for (ArrayList<Destination> parentSet : MSTParents){
+            if (parentSet.contains(destination)){
+                return parentSet;
+            }
+        }
+
+        return null;
+    }
+
+    private ArrayList<DestinationLite> findLite(DestinationLite destination) {
+
+        for (ArrayList<DestinationLite> parentSet : MSTParentsLite) {
+            if (parentSet.contains(destination)) {
+                return parentSet;
+            }
+        }
+
+        return null;
+    }
+
+    public static Double distanceLite(DestinationLite destination1, DestinationLite destination2) {
+
+        Double lat1 = destination1.latitude;
+        Double lon1 = destination1.longitude;
+        Double lat2 = destination2.latitude;
+        Double lon2 = destination2.longitude;
+
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        // Haversine formula
+        Double dlon = lon2 - lon1;
+        Double dlat = lat2 - lat1;
+        Double a = pow(Math.sin(dlat / 2.0), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * pow(Math.sin(dlon / 2.0), 2);
+
+        Double c = 2.0 * Math.asin(sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        Double r = 6371.0;
+
+        // calculate the result
+        return (c * r);
     }
 
 //    private void removeIntersectingEdges(ArrayList<Edge> edges) {
@@ -457,51 +620,14 @@ public class ChristofidesAlgorithm {
         });
     }
 
-    private void createMinimumSpanningTree() {
-        ArrayList<Edge> MST = new ArrayList<>();
-        for (Destination destination : MainActivity.destinations){
-            ArrayList<Destination> newSet = new ArrayList<Destination>();
-            newSet.add(destination);
-            MSTParents.add(newSet);
-        }
-        for ( Edge edge : Edges){
-            if (!find(edge.getVertexA()).equals(find(edge.getVertexB()))){
-                MST.add(edge);
-                mergeParents(edge.getVertexA(), edge.getVertexB());
+    private void sortEdgesByWeightLite(ArrayList<EdgeLite> List) {
+        Collections.sort(List, new Comparator<EdgeLite>() {
+            @Override
+            public int compare(EdgeLite edge, EdgeLite t1) {
+                return Double.compare(edge.weight, t1.weight);
             }
-        }
-        Edges = MST;
+        });
     }
-
-    private void mergeParents(Destination vertexA, Destination vertexB) {
-        ArrayList<Destination> setA = null;
-
-        for (ArrayList<Destination> parentSet : MSTParents){
-            if (parentSet.contains(vertexA)){
-                setA = parentSet;
-                break;
-            }
-        }
-
-        for (ArrayList<Destination> parentSet : MSTParents){
-            if (parentSet.contains(vertexB)){
-                parentSet.addAll(setA);
-            }
-        }
-        MSTParents.remove(setA);
-    }
-
-    private ArrayList<Destination> find(Destination destination) {
-
-        for (ArrayList<Destination> parentSet : MSTParents){
-            if (parentSet.contains(destination)){
-                return parentSet;
-            }
-        }
-
-        return null;
-    }
-
 
     public ArrayList<Edge> getEdges() {
         return Edges;
