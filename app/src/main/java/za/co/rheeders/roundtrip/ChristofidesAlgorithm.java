@@ -24,9 +24,9 @@ public class ChristofidesAlgorithm {
 
     public ChristofidesAlgorithm() {
         minimumSpanningTree_LowMemoryUsage();
-//        addMinimumCostPerfectMatching();
+        addMinimumCostPerfectMatching();
 //        createEulerianTour();
-//        takeShortcuts();
+        takeShortcuts();
     }
 
     private void createEulerianTour() {
@@ -206,10 +206,6 @@ public class ChristofidesAlgorithm {
 //        readdNonIntersectingEdges();
 //        sortEdgesByWeight(Edges);
         createMinimumSpanningTreeLite();
-
-        for (EdgeLite edge : EdgesLite){
-            Edges.add(new Edge(new Destination(edge.vertexA.latitude, edge.vertexA.longitude), new Destination(edge.vertexB.latitude, edge.vertexB.longitude)));
-        }
     }
 
     private void addMinimumCostPerfectMatching() {
@@ -405,7 +401,17 @@ public class ChristofidesAlgorithm {
                 mergeParentsLite(edge.vertexA, edge.vertexB);
             }
         }
-        EdgesLite = MST;
+
+        MainActivity.Name = 1;
+
+        for (EdgeLite edge : MST){
+            Optional<Destination> destinationA = MainActivity.destinations.stream().filter(destination -> destination.getLatitude().equals(edge.vertexA.latitude) && destination.getLongitude().equals(edge.vertexA.longitude)).findAny();
+            Optional<Destination> destinationB = MainActivity.destinations.stream().filter(destination -> destination.getLatitude().equals(edge.vertexB.latitude) && destination.getLongitude().equals(edge.vertexB.longitude)).findAny();
+
+            if (destinationA.isPresent() && destinationB.isPresent()) {
+                Edges.add(new Edge(destinationA.get(), destinationB.get()));
+            }
+        }
     }
 
     private void mergeParents(Destination vertexA, Destination vertexB) {
