@@ -14,19 +14,20 @@ import java.util.stream.Collectors;
 
 public class ChristofidesAlgorithm {
     private ArrayList<DestinationLite> destinationsLite = new ArrayList<>();
-    private ArrayList<Edge> Edges = new ArrayList<>();
+    public static ArrayList<Edge> Edges = new ArrayList<>();
     private ArrayList<EdgeLite> EdgesLite = new ArrayList<>();
     private ArrayList<ArrayList<Destination>> MSTParents = new ArrayList<>();
     private ArrayList<ArrayList<DestinationLite>> MSTParentsLite = new ArrayList<>();
     private ArrayList<Destination> visitedMatchingDestinations = new ArrayList<>();
+    private ArrayList<DestinationLite> visitedMatchingDestinationsLite = new ArrayList<>();
     private int count = 0;
 
 
     public ChristofidesAlgorithm() {
         minimumSpanningTree_LowMemoryUsage();
-        addMinimumCostPerfectMatching();
-//        createEulerianTour();
+        addMinimumCostPerfectMatching_LowMemoryUsage();
         takeShortcuts();
+//        createEulerianTour();
     }
 
     private void createEulerianTour() {
@@ -208,6 +209,62 @@ public class ChristofidesAlgorithm {
         createMinimumSpanningTreeLite();
     }
 
+    private void addMinimumCostPerfectMatching_LowMemoryUsage() {
+        ArrayList<DestinationLite> oddDegreeVertices = new ArrayList<>();
+        for (Destination destination : MainActivity.destinations) {
+            destination.edgeDegrees = 0;
+            destination.edgeDegrees += Edges.stream().filter(edge -> edge.getVertexA().equals(destination)).count();
+            destination.edgeDegrees += Edges.stream().filter(edge -> edge.getVertexB().equals(destination)).count();
+            if (destination.edgeDegrees % 2 != 0) {
+                oddDegreeVertices.add(new DestinationLite(destination.getLatitude(), destination.getLongitude()));
+            }
+        }
+
+        ArrayList<EdgeLite> possibleEdges = createAllPermutationsOfEdgesFromDestinationsLite(oddDegreeVertices);
+
+        ArrayList<ArrayList<EdgeLite>> possibleEdgeSets = new ArrayList<>();
+
+        for (DestinationLite destination : oddDegreeVertices){
+            possibleEdgeSets.add(possibleEdges.stream().filter(edge -> edge.vertexA.equals(destination) || edge.vertexB.equals(destination)).collect(Collectors
+                    .toCollection(ArrayList::new)));
+        }
+
+        Map<Double, PossibleEdgeSetLite> map = new HashMap<>();
+
+        for (ArrayList<EdgeLite> possibleEdgeSet : possibleEdgeSets){
+
+            Double totalWeight = 0.0;
+
+            for (EdgeLite possibleEdge : possibleEdgeSet){
+                totalWeight += distanceLite(possibleEdge.vertexA, possibleEdge.vertexB);
+            }
+
+            PossibleEdgeSetLite edgeSet = new PossibleEdgeSetLite(possibleEdgeSet, getDestinationAsKeyLite(possibleEdgeSet));
+
+            map.put(totalWeight, edgeSet);
+        }
+
+        LinkedHashMap<DestinationLite, ArrayList<EdgeLite>> sortedMap = new LinkedHashMap<>();
+
+        map.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+                .forEachOrdered(x -> sortedMap.put(x.getValue().getDestinationAsKey(), x.getValue().getPossibleEdgeSet()));
+
+        EdgesLite = new ArrayList<>();
+
+        recursiveMatchingLite(sortedMap);
+
+        for (EdgeLite edge : EdgesLite){
+            Optional<Destination> destinationA = MainActivity.destinations.stream().filter(destination -> destination.getLatitude().equals(edge.vertexA.latitude) && destination.getLongitude().equals(edge.vertexA.longitude)).findAny();
+            Optional<Destination> destinationB = MainActivity.destinations.stream().filter(destination -> destination.getLatitude().equals(edge.vertexB.latitude) && destination.getLongitude().equals(edge.vertexB.longitude)).findAny();
+
+            if (destinationA.isPresent() && destinationB.isPresent()) {
+                Edges.add(new Edge(destinationA.get(), destinationB.get()));
+            }
+        }
+    }
+
     private void addMinimumCostPerfectMatching() {
         ArrayList<Destination> oddDegreeVertices = new ArrayList<>();
         for (Destination destination : MainActivity.destinations) {
@@ -306,6 +363,14 @@ public class ChristofidesAlgorithm {
         }
     }
 
+    private DestinationLite getDestinationAsKeyLite(ArrayList<EdgeLite> nextDestination) {
+        if (nextDestination.get(0).vertexA.equals(nextDestination.get(1).vertexA) || nextDestination.get(0).vertexA.equals(nextDestination.get(1).vertexB)){
+            return nextDestination.get(0).vertexA;
+        } else {
+            return nextDestination.get(0).vertexB;
+        }
+    }
+
     private void recursiveMatching(LinkedHashMap<Destination, ArrayList<Edge>> sortedMap) {
         if (sortedMap.size() >= 2){
         ArrayList<Edge> nextDestination = (ArrayList<Edge>) sortedMap.values().toArray()[0];
@@ -337,6 +402,39 @@ public class ChristofidesAlgorithm {
         recursiveMatching(sortedMap);
         }
     }
+
+    private void recursiveMatchingLite(LinkedHashMap<DestinationLite, ArrayList<EdgeLite>> sortedMap) {
+        if (sortedMap.size() >= 2){
+            ArrayList<EdgeLite> nextDestination = (ArrayList<EdgeLite>) sortedMap.values().toArray()[0];
+
+            Collections.sort(nextDestination, new Comparator<EdgeLite>() {
+                @Override
+                public int compare(EdgeLite edge, EdgeLite t1) {
+                    return Double.compare(distanceLite(edge.vertexA, edge.vertexB), distanceLite(t1.vertexA, t1.vertexB));
+                }
+            });
+
+            for (int i = 0; i < nextDestination.size(); i++) {
+                if (!(visitedMatchingDestinationsLite.contains(nextDestination.get(i).vertexA) || visitedMatchingDestinationsLite.contains(nextDestination.get(i).vertexB))) {
+//                if((nextDestination.get(i).getVertexA().getPlaceName().equals("22") || nextDestination.get(i).getVertexB().getPlaceName().equals("22")) ) {
+//                    System.out.println("PLACE NAME: ");
+//
+//                }
+                    EdgesLite.add(nextDestination.get(i));
+
+                    visitedMatchingDestinationsLite.add(nextDestination.get(i).vertexA);
+                    visitedMatchingDestinationsLite.add(nextDestination.get(i).vertexB);
+                    sortedMap.remove(nextDestination.get(i).vertexA);
+                    sortedMap.remove(nextDestination.get(i).vertexB);
+
+                    break ;
+                }
+            }
+
+            recursiveMatchingLite(sortedMap);
+        }
+    }
+
 
     private ArrayList<Edge> createAllPermutationsOfEdgesFromDestinations(ArrayList<Destination> destinations) {
 

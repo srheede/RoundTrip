@@ -21,13 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Optional;
 
 public class LoadCoordinates extends AppCompatActivity {
 
@@ -134,67 +131,67 @@ public class LoadCoordinates extends AppCompatActivity {
     private void readText(String input, int requestCode) {
         File file = new File(input);
         try {
-            MainActivity.destinations.clear();
-            FileReader fileReader = new FileReader(file);
-            BufferedReader br = new BufferedReader(fileReader);
-            String line;
-            while ((line = br.readLine()) != null) {
-                line = line.replace(',', ' ');
-                line = line.replace('°', ' ');
-                Scanner scanner = new Scanner(line);
-                int count = 0;
-                double first = 0;
-                double second = 0;
-                double third = 0;
-                while (scanner.hasNext()) {
-                    if (scanner.hasNextDouble()) {
-                        count++;
-                        switch (count) {
-                            case 1:
-                                first = scanner.nextDouble();
-                                break;
-                            case 2:
-                                second = scanner.nextDouble();
-                                break;
-                            case 3:
-                                third = scanner.nextDouble();
-                                break;
-                            default:
-                                scanner.next();
-                        }
-                        if (second > 1000) {
-                            second = second / 1000;
-                        } else if (third > 1000) {
-                            third = third / 1000;
-                        }
-                    } else {
-                        String next = scanner.next();
-                        if (next.charAt(0) == 'S' && first > 0) {
-                            first = 0 - first;
-                        } else if (next.charAt(0) == 'W' && second > 0) {
-                            second = 0 - second;
-                        }
-                    }
-                }
-                scanner.close();
-                if (count == 2 && requestCode == READ_REQUEST_CODE) {
-                    Destination destination = new Destination(first, second);
-                    MainActivity.destinations.add(destination);
-                } else if (count == 2 && requestCode == READ_REQUEST_CODE_SHORT) {
-                    Destination destination = new Destination(first, second);
-                    MainActivity.destinationsShort.add(destination);
-                } else if (count == 3 && requestCode == READ_REQUEST_CODE) {
-                    Destination destination = new Destination(second, third);
-                    MainActivity.destinations.add(destination);
-                } else if (count == 3 && requestCode == READ_REQUEST_CODE_SHORT) {
-                    Destination destination = new Destination(second, third);
-                    MainActivity.destinationsShort.add(destination);
-                }
-            }
-            br.close();
-//            saveFile(file);
+//            MainActivity.destinations.clear();
+//            FileReader fileReader = new FileReader(file);
+//            BufferedReader br = new BufferedReader(fileReader);
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                line = line.replace(',', ' ');
+//                line = line.replace('°', ' ');
+//                Scanner scanner = new Scanner(line);
+//                int count = 0;
+//                double first = 0;
+//                double second = 0;
+//                double third = 0;
+//                while (scanner.hasNext()) {
+//                    if (scanner.hasNextDouble()) {
+//                        count++;
+//                        switch (count) {
+//                            case 1:
+//                                first = scanner.nextDouble();
+//                                break;
+//                            case 2:
+//                                second = scanner.nextDouble();
+//                                break;
+//                            case 3:
+//                                third = scanner.nextDouble();
+//                                break;
+//                            default:
+//                                scanner.next();
+//                        }
+//                        if (second > 1000) {
+//                            second = second / 1000;
+//                        } else if (third > 1000) {
+//                            third = third / 1000;
+//                        }
+//                    } else {
+//                        String next = scanner.next();
+//                        if (next.charAt(0) == 'S' && first > 0) {
+//                            first = 0 - first;
+//                        } else if (next.charAt(0) == 'W' && second > 0) {
+//                            second = 0 - second;
+//                        }
+//                    }
+//                }
+//                scanner.close();
+//                if (count == 2 && requestCode == READ_REQUEST_CODE) {
+//                    Destination destination = new Destination(first, second);
+//                    MainActivity.destinations.add(destination);
+//                } else if (count == 2 && requestCode == READ_REQUEST_CODE_SHORT) {
+//                    Destination destination = new Destination(first, second);
+//                    MainActivity.destinationsShort.add(destination);
+//                } else if (count == 3 && requestCode == READ_REQUEST_CODE) {
+//                    Destination destination = new Destination(second, third);
+//                    MainActivity.destinations.add(destination);
+//                } else if (count == 3 && requestCode == READ_REQUEST_CODE_SHORT) {
+//                    Destination destination = new Destination(second, third);
+//                    MainActivity.destinationsShort.add(destination);
+//                }
+//            }
+//            br.close();
+            saveFile(file);
             tv_output.setText(MainActivity.filePath + "\n\nsuccessfully loaded.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             tv_output.setText(e.toString());
         }
     }
@@ -239,13 +236,30 @@ public class LoadCoordinates extends AppCompatActivity {
         try {
             String path = "/storage/emulated/0/Download/PlacesCoordinates" + MainActivity.destinations.size() + ".txt";
             FileWriter fileWriter = new FileWriter(filePath);//.getPath().substring(0, filePath.getPath().length() - filePath.getName().length()) + "CopyOf" + filePath.getName().toLowerCase().substring(0, filePath.getName().length()));
-            ArrayList<Destination> addedDestinations = new ArrayList<>();
-            for (Destination destination : MainActivity.destinations) {
-//                if (!addedDestinations.stream().anyMatch(addedDestination -> addedDestination.compareTo(destination) == 0)) {
-                    fileWriter.write("destination = new Destination(" + destination.getLatitude() + "," + destination.getLongitude() + ");\nMainActivity.destinations.add(destination);\n");
-                    addedDestinations.add(destination);
-//                }
+//            ArrayList<Destination> addedDestinations = new ArrayList<>();
+//            for (Destination destination : MainActivity.destinations) {
+////                if (!addedDestinations.stream().anyMatch(addedDestination -> addedDestination.compareTo(destination) == 0)) {
+//                    fileWriter.write("destination = new Destination(" + destination.getLatitude() + "," + destination.getLongitude() + ");\nMainActivity.destinations.add(destination);\n");
+//                    addedDestinations.add(destination);
+////                }
+//            }
+
+            String previousPlaceName = "1";
+            while (ChristofidesAlgorithm.Edges.size() > 0){
+                fileWriter.write( previousPlaceName + "\n");
+                String finalPreviousPlaceName = previousPlaceName;
+                Optional<Edge> optionalEdge = ChristofidesAlgorithm.Edges.stream().filter(edge -> edge.getVertexA().getPlaceName().equals(finalPreviousPlaceName) || edge.getVertexB().getPlaceName().equals(finalPreviousPlaceName)).findAny();
+                if (optionalEdge.isPresent()){
+                    Edge nextEdge = optionalEdge.get();
+                    if (nextEdge.getVertexA().getPlaceName().equals(previousPlaceName)){
+                        previousPlaceName = nextEdge.getVertexB().getPlaceName();
+                    } else {
+                        previousPlaceName = nextEdge.getVertexA().getPlaceName();
+                    }
+                    ChristofidesAlgorithm.Edges.remove(nextEdge);
+                }
             }
+            fileWriter.write( previousPlaceName + "\n");
             fileWriter.close();
             tv_output.setText(MainActivity.filePath + "\n\nsuccessfully updated.");
         } catch (IOException e) {
