@@ -23,6 +23,14 @@ public class Destination implements Comparable {
         this.placeName = Integer.toString(MainActivity.Name++);
     }
 
+    public Destination(Double latitude, Double longitude, String placeName) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.geoHash = encodeHash(latitude, longitude, 12);
+        this.latLong = new LatLng(latitude, longitude);
+        this.placeName = placeName;
+    }
+
     public Destination(String geoHash) {
         LatLong latLong = decodeHash(geoHash);
         this.geoHash = geoHash;

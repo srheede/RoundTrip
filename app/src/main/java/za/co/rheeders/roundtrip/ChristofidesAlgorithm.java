@@ -26,8 +26,8 @@ public class ChristofidesAlgorithm {
     public ChristofidesAlgorithm() {
         minimumSpanningTree_LowMemoryUsage();
         addMinimumCostPerfectMatching_LowMemoryUsage();
-        takeShortcuts();
 //        createEulerianTour();
+        takeShortcuts();
     }
 
     private void createEulerianTour() {
