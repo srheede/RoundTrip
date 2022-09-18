@@ -149,7 +149,7 @@ public class UseExample extends AppCompatActivity {
                     MainActivity.destinations.add(destination);
                 } else if (count == 3) {
                     Destination destination = new Destination(second, third);
-                    destination.setPlaceName(String.valueOf(first));
+                    destination.setPlaceName(Integer.toString((int)first));
                     MainActivity.destinations.add(destination);
                 }
             }

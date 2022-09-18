@@ -225,8 +225,9 @@ public class LoadCoordinates extends AppCompatActivity {
                             Uri uri = data.getData();
                             MainActivity.filePath = uri.getPath();
                             MainActivity.filePath = MainActivity.filePath.substring(MainActivity.filePath.indexOf(":") + 1);
-//                            readText(MainActivity.filePath, READ_REQUEST_CODE);
-                            checkOptimalTourLength(MainActivity.filePath, READ_REQUEST_CODE);
+                            readText(MainActivity.filePath, READ_REQUEST_CODE);
+//                            checkOptimalTourLength(MainActivity.filePath, READ_REQUEST_CODE);
+//                            saveNewOptimalTour(new File(MainActivity.filePath));
                         }
                     }
                 }
@@ -278,6 +279,8 @@ public class LoadCoordinates extends AppCompatActivity {
                         previousPlaceName = nextEdge.getVertexA().getPlaceName();
                     }
                     ChristofidesAlgorithm.Edges.remove(nextEdge);
+                } else {
+                    break;
                 }
             }
             fileWriter.write( previousPlaceName + "\n");

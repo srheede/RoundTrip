@@ -9,6 +9,7 @@ public class Edge implements Comparable{
     private final Double weight;
     private final Double gradient;
     private final Double intercept;
+    private Edge intersectingEdge;
     private boolean removed = false;
 
     public Edge(Destination vertexA, Destination vertexB){
@@ -91,5 +92,13 @@ public class Edge implements Comparable{
 
     private Double calculateIntercept() {
         return (vertexA.getLatitude() - (gradient * vertexA.getLongitude()));
+    }
+
+    public Edge getIntersectingEdge() {
+        return intersectingEdge;
+    }
+
+    public void setIntersectingEdge(Edge intersectingEdge) {
+        this.intersectingEdge = intersectingEdge;
     }
 }
