@@ -261,6 +261,17 @@ public class LoadCoordinates extends AppCompatActivity {
         }
     }
 
+    public static void saveLength(String totalDis) {
+//        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        try {
+            String path = "/storage/emulated/0/Download/PlacesCoordinates" + MainActivity.destinations.size() + ".txt";
+            FileWriter fileWriter = new FileWriter(path);//.getPath().substring(0, filePath.getPath().length() - filePath.getName().length()) + "CopyOf" + filePath.getName().toLowerCase().substring(0, filePath.getName().length()));
+            fileWriter.write(totalDis);
+            fileWriter.close();
+        } catch (IOException e) {
+        }
+    }
+
     private void saveNewOptimalTour(File filePath) {
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
         try {

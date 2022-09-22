@@ -249,6 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         String totalDis = "Total distance: " + (int) shortestDistance + " km";
 
+        LoadCoordinates.saveLength(totalDis);
         MapsActivity.tvDistance.setText(totalDis);
     }
 
