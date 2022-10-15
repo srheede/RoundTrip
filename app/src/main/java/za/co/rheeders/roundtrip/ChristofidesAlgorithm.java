@@ -24,8 +24,8 @@ public class ChristofidesAlgorithm {
 
 
     public ChristofidesAlgorithm() {
-        minimumSpanningTree_LowMemoryUsage();
-        addMinimumCostPerfectMatching_LowMemoryUsage();
+        minimumSpanningTree();
+        addMinimumCostPerfectMatching_worstFirst();
 //        createEulerianTour();
         takeShortcuts();
     }
@@ -220,6 +220,11 @@ public class ChristofidesAlgorithm {
             }
         }
 
+//        ArrayList<Edge> connectedEdgesB = AddedEdges.stream().filter(edge1 -> edge1.getConnectedVertexB().equals(edge.getConnectedVertexB())).collect(Collectors.toCollection(ArrayList::new));
+//        for (Edge connectedEdgeB : connectedEdgesB) {
+//            connectedEdgeB.setConnectedVertexA(edge.getConnectedVertexB());
+//        }
+
         ArrayList<EdgeLite> possibleEdges = createAllPermutationsOfEdgesFromDestinationsLite(oddDegreeVertices);
 
         ArrayList<ArrayList<EdgeLite>> possibleEdgeSets = new ArrayList<>();
@@ -276,6 +281,46 @@ public class ChristofidesAlgorithm {
             }
         }
 
+        ArrayList<Edge> possibleEdges = createAllPermutationsOfEdgesFromDestinations(oddDegreeVertices);
+
+        sortEdgesByWeight(possibleEdges);
+
+        ArrayList<Edge> minimumCostPerfectMatching = new ArrayList<>();
+        for (Edge edge : possibleEdges) {
+            if (oddDegreeVertices.contains(edge.getVertexA()) && oddDegreeVertices.contains(edge.getVertexB())) {
+                minimumCostPerfectMatching.add(edge);
+                oddDegreeVertices.remove(edge.getVertexA());
+                oddDegreeVertices.remove(edge.getVertexB());
+            }
+
+            if (oddDegreeVertices.size() == 0)
+                break;
+        }
+
+//        ArrayList<Edge> existingEdges = new ArrayList<>();
+//        for (Edge edge : minimumCostPerfectMatching) {
+//            if (Edges.stream().anyMatch(existingEdge -> existingEdge.compareTo(edge) == 0)) {
+//                existingEdges.add(edge);
+//            }
+//        }
+//        minimumCostPerfectMatching.removeAll(existingEdges);
+
+//        Edges = minimumCostPerfectMatching;
+        Edges.addAll(minimumCostPerfectMatching);
+    }
+
+
+        private void addMinimumCostPerfectMatching_worstFirst() {
+        ArrayList<Destination> oddDegreeVertices = new ArrayList<>();
+        for (Destination destination : MainActivity.destinations) {
+            destination.edgeDegrees = 0;
+            destination.edgeDegrees += Edges.stream().filter(edge -> edge.getVertexA().equals(destination)).count();
+            destination.edgeDegrees += Edges.stream().filter(edge -> edge.getVertexB().equals(destination)).count();
+            if (destination.edgeDegrees % 2 != 0) {
+                oddDegreeVertices.add(destination);
+            }
+        }
+
 //        for (Destination destination : oddDegreeVertices) {
 //            System.out.println("PLACE NAME: " + destination.getPlaceName());
 //            MapsActivity.map.addMarker(new MarkerOptions().position(destination.getLatLong()).title(destination.getPlaceName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon_black)));
@@ -300,16 +345,16 @@ public class ChristofidesAlgorithm {
                 totalWeight += possibleEdge.getWeight();
             }
 
-            ArrayList<Edge> intersectingEdges = new ArrayList<>();
+//            ArrayList<Edge> intersectingEdges = new ArrayList<>();
 
-            for (Edge edgeA : possibleEdgeSet){
-                for (Edge edgeB : Edges){
-                    if (!edgeA.equals(edgeB) && isIntersecting(edgeA, edgeB)){
-                        intersectingEdges.add(edgeA);
-                        break;
-                    }
-                }
-            }
+//            for (Edge edgeA : possibleEdgeSet){
+//                for (Edge edgeB : Edges){
+//                    if (!edgeA.equals(edgeB) && isIntersecting(edgeA, edgeB)){
+//                        intersectingEdges.add(edgeA);
+//                        break;
+//                    }
+//                }
+//            }
 
             PossibleEdgeSet edgeSet = new PossibleEdgeSet(possibleEdgeSet, getDestinationAsKey(possibleEdgeSet));
 

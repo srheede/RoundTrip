@@ -1,7 +1,5 @@
 package za.co.rheeders.roundtrip;
 
-import static za.co.rheeders.roundtrip.Algorithm.enteredRoute;
-
 import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -25,7 +23,6 @@ import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
 import java.util.ArrayList;
@@ -163,41 +160,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buttonNextStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    rollbacks.add(new Rollback());
-                    if (enteredRoute.size() > 4) {
-                        switch (MainActivity.switchAlgorithm) {
-                            case 0:
-                                if (!Algorithm.sortedLatitude.isEmpty()) {
-                                    Algorithm.addNextPoint();
-                                }
-                                break;
-                            case 1:
-                                Algorithm.addNextDestination();
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+//                    rollbacks.add(new Rollback());
+//                    if (enteredRoute.size() > 4) {
+//                        switch (MainActivity.switchAlgorithm) {
+//                            case 0:
+////                                Algorithm.addNextShortestEdge();
+//                                Algorithm.runImprovement();
+//                                break;
+//                            case 1:
+////                                Algorithm.addNextDestination();
+//                                Algorithm.runImprovement();
+//                                break;
+//                            default:
+//                                break;
+//                        }
+//                    }
+
+//                    Algorithm.addNextDestination();
+                    Algorithm.runImprovement();
+
+
                 }
             });
 
             buttonPreviousStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!rollbacks.isEmpty()) {
-                        if (MainActivity.switchAlgorithm == 0) {
-                            Algorithm.bubbleShrinkRoute = rollbacks.get(rollbacks.size() - 1).bubbleShrinkRoute;
-                            Algorithm.bubbleShrinkDistance = rollbacks.get(rollbacks.size() - 1).bubbleShrinkDistance;
-                        }
-                        Algorithm.enteredRoute = rollbacks.get(rollbacks.size() - 1).enteredRoute;
-                        Algorithm.parameterDiamondRoute = rollbacks.get(rollbacks.size() - 1).parameterDiamondRoute;
-                        Algorithm.sortedLatitude = rollbacks.get(rollbacks.size() - 1).sortedLatitude;
-                        Algorithm.parameterDiamondDistance = rollbacks.get(rollbacks.size() - 1).parameterDiamondDistance;
-                        Algorithm.shortestDistance = rollbacks.get(rollbacks.size() - 1).shortestDistance;
-                        Algorithm.smallestCircle = rollbacks.get(rollbacks.size() - 1).smallestCircle;
-                        rollbacks.remove(rollbacks.size() - 1);
-                        Algorithm.setMap();
-                    }
+//                    if (!rollbacks.isEmpty()) {
+//                        if (MainActivity.switchAlgorithm == 0) {
+//                            Algorithm.bubbleShrinkRoute = rollbacks.get(rollbacks.size() - 1).bubbleShrinkRoute;
+//                            Algorithm.bubbleShrinkDistance = rollbacks.get(rollbacks.size() - 1).bubbleShrinkDistance;
+//                        }
+//                        Algorithm.enteredRoute = rollbacks.get(rollbacks.size() - 1).enteredRoute;
+//                        Algorithm.parameterDiamondRoute = rollbacks.get(rollbacks.size() - 1).parameterDiamondRoute;
+//                        Algorithm.sortedLatitude = rollbacks.get(rollbacks.size() - 1).sortedLatitude;
+//                        Algorithm.parameterDiamondDistance = rollbacks.get(rollbacks.size() - 1).parameterDiamondDistance;
+//                        Algorithm.shortestDistance = rollbacks.get(rollbacks.size() - 1).shortestDistance;
+//                        Algorithm.smallestCircle = rollbacks.get(rollbacks.size() - 1).smallestCircle;
+//                        rollbacks.remove(rollbacks.size() - 1);
+//                        Algorithm.setMap();
+//                    }
+                    Algorithm.run2Improvement();
+
                 }
             });
 
@@ -238,19 +242,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         ChristofidesAlgorithm christofidesAlgorithm = new ChristofidesAlgorithm();
-        double shortestDistance = 0.0;
-        for (Edge edge : christofidesAlgorithm.getEdges()) {
-            shortestDistance += edge.getWeight();
-            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
-            polylineOptions.add(edge.getVertexA().getLatLong());
-            polylineOptions.add(edge.getVertexB().getLatLong());
-            Polyline polyline = MapsActivity.map.addPolyline(polylineOptions);
-        }
+        Algorithm.christofidesToDiamondRoute();
+//        double shortestDistance = 0.0;
+//        for (Edge edge : christofidesAlgorithm.getEdges()) {
+//            shortestDistance += edge.getWeight();
+//            PolylineOptions polylineOptions = new PolylineOptions().clickable(false);
+//            polylineOptions.add(edge.getVertexA().getLatLong());
+//            polylineOptions.add(edge.getVertexB().getLatLong());
+//            Polyline polyline = MapsActivity.map.addPolyline(polylineOptions);
+//        }
 
-        String totalDis = "Total distance: " + (int) shortestDistance + " km";
+//        String totalDis = "Total distance: " + (int) shortestDistance + " km";
 
-        LoadCoordinates.saveLength(totalDis);
-        MapsActivity.tvDistance.setText(totalDis);
+//        LoadCoordinates.saveLength(totalDis);
+//        MapsActivity.tvDistance.setText(totalDis);
+
     }
 
     private double distancePointToLine(Destination point, Destination segmentPointA, Destination segmentPointB) {

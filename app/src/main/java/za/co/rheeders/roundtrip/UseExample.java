@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class UseExample extends AppCompatActivity {
@@ -108,7 +109,9 @@ public class UseExample extends AppCompatActivity {
             while ((line = br.readLine()) != null) {
                 line = line.replace(',', ' ');
                 line = line.replace('°', ' ');
+
                 Scanner scanner = new Scanner(line);
+                scanner.useLocale(Locale.ROOT);
                 int count = 0;
                 double first = 0;
                 double second = 0;

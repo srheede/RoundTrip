@@ -14,6 +14,7 @@ public class Destination implements Comparable {
     private String placeName;
     private LatLng latLong;
     public int edgeDegrees = 0;
+    private EdgeSegment edgeSegment;
 
     public Destination(Double latitude, Double longitude) {
         this.latitude = latitude;
@@ -99,5 +100,13 @@ public class Destination implements Comparable {
 
     public void setGeoHash(String geoHash) {
         this.geoHash = geoHash;
+    }
+
+    public EdgeSegment getEdgeSegment() {
+        return edgeSegment;
+    }
+
+    public void setEdgeSegment(EdgeSegment edgeSegment) {
+        this.edgeSegment = edgeSegment;
     }
 }

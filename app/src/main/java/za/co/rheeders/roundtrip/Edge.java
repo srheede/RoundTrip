@@ -3,14 +3,23 @@ package za.co.rheeders.roundtrip;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
+import java.util.ArrayList;
+
 public class Edge implements Comparable{
     private Destination vertexA;
     private Destination vertexB;
+    private Destination connectedVertexB;
+    private Destination connectedVertexA;
     private final Double weight;
     private final Double gradient;
     private final Double intercept;
     private Edge intersectingEdge;
     private boolean removed = false;
+    ArrayList<Destination> shortestRoute;
+    Destination nextDestination = null;
+    private boolean isSegmentToBorder = false;
+    private boolean isPointToBorder = false;
+    private EdgeSegment shortestBorder = null;
 
     public Edge(Destination vertexA, Destination vertexB){
         this.vertexA = vertexA;
@@ -18,6 +27,28 @@ public class Edge implements Comparable{
         this.weight = distance(vertexA, vertexB);
         this.gradient = calculateGradient();
         this.intercept = calculateIntercept();
+        this.connectedVertexA = null;
+        this.connectedVertexB = null;
+        this.shortestRoute = null;
+    }
+
+    public Edge(Destination nextDestination, ArrayList<Destination> shortestRoute, Double weight) {
+        this.vertexA = nextDestination;
+        this.nextDestination = nextDestination;
+        this.weight = weight;
+        this.shortestRoute = shortestRoute;
+        this.isPointToBorder = true;
+        this.gradient = null;
+        this.intercept = null;
+    }
+
+    public Edge(EdgeSegment shortestBorder) {
+        this.shortestBorder = shortestBorder;
+        this.weight = shortestBorder.getHypotheticalNextEdgeWeight();
+        this.isSegmentToBorder = true;
+        this.nextDestination = null;
+        this.gradient = null;
+        this.intercept = null;
     }
 
     @Override
@@ -100,5 +131,49 @@ public class Edge implements Comparable{
 
     public void setIntersectingEdge(Edge intersectingEdge) {
         this.intersectingEdge = intersectingEdge;
+    }
+
+    public Destination getConnectedVertexB() {
+        return connectedVertexB;
+    }
+
+    public void setConnectedVertexB(Destination connectedVertexB) {
+        this.connectedVertexB = connectedVertexB;
+    }
+
+    public Destination getConnectedVertexA() {
+        return connectedVertexA;
+    }
+
+    public void setConnectedVertexA(Destination connectedVertexA) {
+        this.connectedVertexA = connectedVertexA;
+    }
+
+    public Destination getNextDestination() {
+        return nextDestination;
+    }
+
+    public boolean isSegmentToBorder() {
+        return isSegmentToBorder;
+    }
+
+    public void setSegmentToBorder(boolean segmentToBorder) {
+        isSegmentToBorder = segmentToBorder;
+    }
+
+    public boolean isPointToBorder() {
+        return isPointToBorder;
+    }
+
+    public void setPointToBorder(boolean pointToBorder) {
+        isPointToBorder = pointToBorder;
+    }
+
+    public EdgeSegment getShortestBorder() {
+        return shortestBorder;
+    }
+
+    public void setShortestBorder(EdgeSegment shortestBorder) {
+        this.shortestBorder = shortestBorder;
     }
 }
